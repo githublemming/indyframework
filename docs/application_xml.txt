@@ -1,0 +1,112 @@
+Application XML file
+=====================
+
+An application is defined and configured using the application.xml file.
+
+The file is read after the framework has been loaded, and all Providers in the 
+files are loaded into memory once they have been checked that the confirm to valid 
+providers.
+
+<?xml version="1.0" encoding="UTF-8"?>
+<providers>
+    <provider name="indyframework.providers.SessionServiceProvider"/>
+    <provider name="indyframework.providers.GetServiceProvider"/>
+    <provider name="indyframework.providers.PostServiceProvider"/>
+    <provider name="indyframework.providers.EmailServiceProvider"/>
+    <provider name="indyframework.providers.MySQLPDODatabaseServiceProvider">
+        <property name="Host" value="localhost"/>
+        <property name="Name" value="Purple_Ambassador"/>
+        <property name="Username" value="root"/>
+        <property name="Password" value="root"/>
+    </provider>
+    
+    <provider name="indyframework.providers.SessionBasketServiceProvider"/>
+    <provider name="providers.ProductServiceProvider">
+        <property name="KitView" value="mentoringKit.view.php"/>
+        <property name="ProductView" value="product.view.php"/>
+    </provider>
+    <provider name="providers.ModuleServiceProvider"/>
+    <provider name="providers.PageServiceProvider"/>
+    <provider name="providers.AuthenticationServiceProvider"/>
+</providers>
+ 
+All providers that come as part of the framework are prefixed with 
+indyframework.providers, and all Providers that are part of the 
+application just start with providers. This allows the loader to work out where 
+it should be looking for the Provider.
+
+
+Properties can be set on the Provider during application load, and these are added
+to the provider definition as child elements.
+
+
+When the application is bootstrapping a provider can only access services that
+appear above it in the XML file. All Service Providers that will be used
+by the majority of the other providers should be place near the top of the file 
+e.g. in the above example SessionServiceProvider could be used by almost any 
+Provider so it is at the top.
+
+
+In the example above AuthenticationServiceProvider is able to use the 
+MySQLPDODatabaseServiceProvider service as it appears above it, while the 
+EmailServiceProvider is not.
+
+
+
+When a Provider requests a service it will be presented with the first service
+that appear above it, this means you can have multiple implementations of the
+same service in the tree. For example you might have two providers in the tree
+that are implementing the ReportService as in the next example. When the
+ReportGeneratorServiceProvider is bootstrapped and requests an instance of the
+ReportService it will be given ReportServiceCacheProvider which provides a cache
+infront of the ReportServiceDBProvider.
+
+
+<providers>
+
+    <provider name="providers.ReportServiceDBProvider"/>
+    <provider name="providers.ReportServiceCacheProvider"/>
+    
+    <provider name="providers.ReportGeneratorServiceProvider"/>  
+   
+</providers>
+
+
+Something else to note in the above example is that even though
+ReportServiceCacheProvider is a provided of the ReportService it also requires
+an provider of the service to be able to function. In the above example when it
+requests an instance of the ReportService it is given ReportServiceDBProvider.
+
+
+
+For most applications you shouldn't run into a problem with the order of the 
+providers in the file, but in the rare occasions that you do it is possible to
+state that you need a specific provider from above you. The following example
+demonstrate this
+
+<providers>
+
+    <provider name="indyframework.providers.MySQLPDODatabaseServiceProvider" id="stagingStore">
+        <property name="Host"     value="localhost"/>
+        <property name="Name"     value="icstore"/>
+        <property name="Username" value="root"/>
+        <property name="Password" value="root"/>
+    </provider>
+
+    <provider name="indyframework.providers.MySQLPDODatabaseServiceProvider">
+        <property name="Host"     value="localhost"/>
+        <property name="Name"     value="icadmin"/>
+        <property name="Username" value="root"/>
+        <property name="Password" value="root"/>
+    </provider>
+    
+    <provider name="providers.ReportServiceProvider">
+        <property name="DatabaseService" ref="stagingStore"/>
+    </provider>  
+   
+</providers>
+
+
+As you can see ReportServiceProvider would normally get the first instance of the
+provider directly above it, but in the above example it is asking for a specific
+implmentation of the provider.

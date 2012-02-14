@@ -1,0 +1,30 @@
+Services
+========
+
+A Service defines functionality that is implemented by a Provider.
+
+To create a Service you create a PHP interface file that extends ServiceInterface,
+and that’s all there is too it. Here is an example of a Service definition
+
+<?php
+/**
+ * Implementors of this Service must provide functionality that provides in
+ * some shape or form the message ‘Hello World’
+ */
+interface HelloWorldService extends ServiceInterface
+{
+    /**
+     * Returns a message.
+     */
+    public function sayHelloWorld();
+}
+?>
+
+
+The above example is very simple, it defines a Service called HelloWordService 
+that provides a single piece of functionality which is sayHelloWorld().
+
+As you can see it extends ServiceInterface which is a marker interface that does 
+not force any functionality. All Services must extend ServiceInterface, there is 
+a check made during the loading of the application to ensure that all classes
+being loaded as Providers implement this.

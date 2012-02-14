@@ -1,0 +1,5 @@
+The best way to learn is to see a simple example, so we’ll do what ever other 
+computer language example in the world does and create a simple Hello World 
+application.
+
+This example is split up into 4 parts Service, Provider, application.xml, Runnable.

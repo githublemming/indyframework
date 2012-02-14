@@ -1,0 +1,54 @@
+A Brief History of the Indy Framework
+=====================================
+
+The Indy Framework started of in late 2010 as a means of being able to reuse all
+the little snippets/functions of code that I had amassed over the years into one
+easy to integrate framework that I could drop into any application/website that
+I was working on.
+
+An example of the early implementation of the framework is this :-
+
+<?php
+require_once ‘indy/indy.php’;
+
+// I define my SQL statement
+$query = "SELECT * FROM table WHERE id = :id";
+
+// now I need to create an array to hold all of the Bind Params
+$data = array(‘id’ => ’1′);
+
+// now perform the query
+$result = $indy->load(‘Database’)->select($query, $data);
+?>
+
+Assuming that the Database module had been configured in the configuration file,
+then all you needed was three lines of code to query the database, with all error
+handling, connection checking and such done for you.
+
+This was great, the modules would only be loaded when they were needed, and once
+loaded they would be cached so that the same modules could be reused in the same
+page request. I created almost a dozen differing module for handling functionality
+such as Database, POST, GET, Cookie, Facebook and File.
+
+
+A Change of Direction
+=====================
+
+All was going well until I decided to convert a website that I’d been commissioned
+to write a few years earlier to use the framework to ensure that it was stable
+and feature rich enough for the job.
+
+One of the tasks that I wanted to do was to put a cache in front of the database 
+module to improve performance, but try as I might I could not think of an elegant
+enough solution to the problem.
+It was while I thinking of this I thought back to a in-house developed Java framework
+that I had used in a previous company that would allow for a cache to sit in front
+of any module transparently.
+It used the concept of a class (a provider) that provided an implementation of a
+service, and by chaining services (providers) together you built an application,
+and by having two different providers of a service in the chain you could put a 
+cache in front of a database.
+
+I had always liked the whole idea of the Java Framework, so I decided to try and 
+refactor Indy Framework to define services and have providers doing the implementation,
+and the current state of the framework reflects this refactoring.

@@ -1,0 +1,84 @@
+Providers
+=========
+
+Providers contain an implementation of a Service. You can have multiple Providers 
+of a single Service offering slight different functionality.
+
+To create a Provider all you have to do is create a PHP class, implement a couple
+of interfaces and add some functionality.
+
+<?php
+require_once INDY_SERVICE . ‘HelloWorldService.php’;
+
+/**
+ * Implementation of the HelloWorldService.
+ * This does nothing more than return Hello World!.
+ */
+class HelloWorldServiceProvider implements ProviderInterface, HelloWorldService
+{
+    private $msg = "Hello World !!.";
+
+    public function applicationEvent(ServiceRepository $repository, $event)
+    {
+        switch($event)
+        {
+            case APPLICATION_LOAD:
+            {
+                // Registers itself as a provider of the HelloWorldService.
+                $repository->registerService(‘HelloWorldService’, $this);
+                break;
+            }
+            case APPLICATION_INIT:
+            {
+                // At this point you can request other services if needed
+                break;
+            }
+        }
+    }
+
+    ///////////////////////////////////////////////////////////
+    ///// Implementation of the HelloWorldService interface
+    ///////////////////////////////////////////////////////////
+    public function sayHello()
+    {
+        return $this->msg;
+    }
+}
+?>
+
+The first line of the example loads the Service this is being implemented, the
+constant INDY_SERVICE defines the path to the core Services. There is another
+constant called APPLICATION_SERVICE that defines a path to the location were your
+application should store its services.
+
+The class is called HelloWorldServiceProvider and is in a file of the same name.
+There is nothing currently in the framework that enforces naming of Providers,
+but it makes sense to name the class and the file with the task it does.
+
+All Providers along with implementing the Service they are providing, also need 
+to implement ProviderInterface. This forces the class to implement the applicationEvent
+function, and a check is made when the application is loading to ensure that 
+this is the case.
+
+The applicationEvent function is called multiple times during the loading of an 
+application. Currently there are two times when it is called:
+
+* When the Provider itself has been loaded. At this point the class can register
+  itself as Provider of a Service.
+* When the whole application has been loaded an init event is sent. This is a good 
+  place to perform initialisation actions such as requesting any services that might
+  be required.
+
+It is possible to define properties in the application.xml file that can be passed
+in at application load, think along the lines of Spring Direct Injection. This 
+functionality allows a Provider to be used in different applications without the
+need for code changes. An example of this would be a DatabaseService provider 
+that needs different host/username/password/database information in every application.
+
+<provider name="indyframework.providers.HelloWorldServiceProvider">
+  <property name="Message" value="Hello World !!"/>
+</provider>
+ 
+To pass in a property at application load all you have to do is define a property 
+on the Provider like the example above, and then create a set function in the class. 
+It is not compulsorily to add a property to a Provider if you don’t want too.

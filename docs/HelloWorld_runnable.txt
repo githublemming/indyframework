@@ -1,0 +1,81 @@
+In the final part of our Hello World example we look at building and running the
+application. In order to start your application you have to run it.
+
+Lets imagine that we have a page called index.php which is ran by default by the 
+webserver. In this file we would add the following code.
+
+<?php
+/**
+ * This is an example of a provider file that
+ * 1. is added to the application
+ * 2. requests a service that it needs to function correctly
+ * 3. outputs (echos) a message.
+ */
+require_once ‘indyframework/loadApplication.php’;
+
+class IndexPageProvider implements ProviderInterface, RunnableInterface
+{
+    // local variable for holding a reference to the HelloWorldService
+    private $helloWorldService;
+
+    /////////////////////////////////////////////////
+    ///// ProviderInterface functions
+    /////////////////////////////////////////////////
+    public function applicationEvent(ServiceRepository $repository, $event)
+    {
+        switch($event)
+        {
+            case APPLICATION_LOAD:
+            {
+                // Only providers that are registerd with the service
+                // repository are able to request services, so we 
+                // add ourselves.
+                $repository->registerService(‘RunnableInterface’, $this);
+                break;
+            }
+            case APPLICATION_INIT:
+            {
+                // Requesting the HelloWorldService from the
+                // service repository
+                $this->helloWorldService = $repository->requireService(‘HelloWorldService’, $this);
+                break;
+            }
+        }
+    }
+
+    //////////////////////////////////////////////////////
+    ///// RunnableInterface functions
+    //////////////////////////////////////////////////////
+    public function run()
+    {
+        echo $this->helloWorldService->sayHello();
+    }
+}
+
+// Create an instance of the local provider class
+$indexPageProvider = new IndexPageProvider();
+
+// Request that the local provider be ran
+run($indexPageProvider);
+?>
+
+At the top we include the framework. By adding this line the application (as 
+defined in the application.xml file) is loaded and configured automatically.
+
+We then need to create a Provider that will be use to run the application. As you
+can see this is almost identical to a normal Provider except in one small way, 
+instead of implementing a Service it instead implements RunnableInterface.
+
+In order that we can get access to services we register ourselves in the Repository 
+during the Application Loading.
+
+Once the application is loaded, when we get notification to perform any 
+initialisation functions we request a HelloWorldService from the repository and
+store this in a local variable for future use.
+
+In the run() function we make a request on the HelloWorldService and echo the results.
+
+The last two lines of the example create an instance of the IndexPageProvider and
+then request that is be ran.
+
+What you would see in your web browser would simply be the message Hello World!!

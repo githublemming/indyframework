@@ -1,0 +1,62 @@
+Continuing the example started in the Services tutorial, here is an 
+implementation of the HelloWorldService.
+
+<?php
+require_once INDY_SERVICE . ‘HelloWorldService.php’;
+
+/**
+ * Implementation of the HelloWorldService.
+ * This does nothing more than return Hello World!.
+ */
+class HelloWorldServiceProvider implements ProviderInterface, HelloWorldService
+{
+    public function applicationEvent(ServiceRepository $repository, $event)
+    {
+        switch($event)
+        {
+            case APPLICATION_LOAD:
+            {
+                // Registers itself as a provider of the HelloWorldService.
+                $repository->registerService(‘HelloWorldService’, $this);
+                break;
+            }
+            case APPLICATION_INIT:
+            {
+                // At this point you can request other services if needed
+                break;
+            }
+        }
+    }
+
+    ///////////////////////////////////////////////////////////
+    ///// Implementation of the HelloWorldService interface
+    ///////////////////////////////////////////////////////////
+    public function sayHello()
+    {
+        return "Hello World !!";
+    }
+}
+?>
+
+
+To create a provider all you have to do is create a PHP class that implements
+ProviderInterface and the service that your class is providing and implmentation
+of.
+
+You must include the applicationEvent function, this is part of the
+ProviderInterface and if you don't you get an exception.
+
+APPLICATION_LOAD
+In this section you register the service that the class is implementing.
+
+APPLICATION_INIT
+In this section you can do any other configuration that needs to be done in order
+for the provider to work, such as getting a reference to other service, applying
+any properties, etc.
+
+Both of the above case statements are only called once when the application is
+being bootstrapped.
+
+
+The last thing to do is provide the implementation of the service, in the above
+example this is the sayHello() function.

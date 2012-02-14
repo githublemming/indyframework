@@ -1,0 +1,10 @@
+The application.xml file defines what services/providers make up your application.
+
+The application.xml file for our Hello World example looks like this.
+
+<?xml version="1.0" encoding="UTF-8"?>
+<providers>
+    <provider name="indyframework.providers.HelloWorldServiceProvider"/>
+</providers>
+ 
+We are including a single provider with the name indyframework.providers.HelloWorldServiceProvider
