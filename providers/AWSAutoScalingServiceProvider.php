@@ -34,11 +34,13 @@ class AWSAutoScalingServiceProvider implements ProviderInterface, AWSAutoScaling
             case APPLICATION_LOAD:
             {
                 $serviceRepository->registerService('AWSAutoScalingService', $this);
-                
-                $this->aws_as = new AmazonAS();
-                $this->aws_as->set_region($this->aws_as_region);
-                
                 break;
+            }
+            case APPLICATION_INIT:
+            {
+            	$this->aws_as = new AmazonAS();
+            	$this->aws_as->set_region($this->aws_as_region);
+            	break;
             }
         }
     }
@@ -61,6 +63,6 @@ class AWSAutoScalingServiceProvider implements ProviderInterface, AWSAutoScaling
     	$options['MinSize'] = $min;
     	$options['MaxSize'] = $max;
     	
-    	$this->aws_as->update_auto_scaling_group($groupName, $options);
+    	return $this->aws_as->update_auto_scaling_group($groupName, $options);
     }
 }

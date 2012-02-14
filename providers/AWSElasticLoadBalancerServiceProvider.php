@@ -34,12 +34,14 @@ class AWSElasticLoadBalancerServiceProvider implements ProviderInterface, AWSEla
             case APPLICATION_LOAD:
             {
                 $serviceRepository->registerService('AWSElasticLoadBalancingService', $this);
-                
-                $this->aws_elb = new AmazonELB();
-                $this->aws_elb->set_region($this->aws_elb_region);
-                
                 break;
             }
+            case APPLICATION_INIT:
+            {
+                $this->aws_elb = new AmazonELB();
+                $this->aws_elb->set_region($this->aws_elb_region);
+           		break;
+           	}
         }
     }
 
