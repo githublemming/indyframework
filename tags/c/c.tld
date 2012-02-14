@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<taglib>
+    <name>Core Tag Library</name>
+    <description>Provides the core functionality tags</description>
+
+    <tag>
+        <name>Out</name>
+        <description>Renders data to the page</description>
+        <attribute>
+            <name>value</name>
+            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>default</name>
+            <required>false</required>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>Set</name>
+        <description>Saved data to a PageScope variable</description>
+        <attribute>
+            <name>var</name>
+            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>value</name>
+            <required>true</required>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>Remove</name>
+        <description>Deletes a variable from the PageScope</description>
+        <attribute>
+            <name>var</name>
+            <required>true</required>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>If</name>
+        <description>processes the body if test is true</description>
+        <attribute>
+            <name>test</name>
+            <required>true</required>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>ForEach</name>
+        <description>repeats the nested body content over a collection or for a fixed number of times.</description>
+        <attribute>
+            <name>items</name>
+            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>var</name>
+            <required>true</required>
+        </attribute>
+    </tag>
+</taglib>
