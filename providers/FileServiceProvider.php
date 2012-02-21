@@ -45,7 +45,7 @@ class FileServiceProvider implements ProviderInterface, FileService
     ////////////////////////////////////////////////////////////////////////////
     ///// Implementation of the FileService interface
     ////////////////////////////////////////////////////////////////////////////
-    public function uploadedFileAvailable() {
+    public function uploadedFileAvailable($postAttributeName) {
         
         global $HTTP_POST_FILES;
         
@@ -56,13 +56,13 @@ class FileServiceProvider implements ProviderInterface, FileService
             $_FILES = $HTTP_POST_FILES;
         }
 
-        if ($_FILES['upload_file']['error'] > 0) {
+        if ($_FILES[$postAttributeName]['error'] > 0) {
             
             echo "Error: " . $_FILES["file"]["error"];
             
         } else {
         
-            if(isset($_FILES['upload_file']))
+            if(isset($_FILES[$postAttributeName]))
             {
                 $uploadedFileAvailable = true;
             }
@@ -72,14 +72,14 @@ class FileServiceProvider implements ProviderInterface, FileService
         return $uploadedFileAvailable;
     }
     
-    public function uploadedFileName() {
+    public function uploadedFileName($postAttributeName) {
         
         if(!$this->uploadedFileAvailable())
         {
             return false;
         }
         
-        $filename = basename($_FILES['upload_file']['name']);
+        $filename = basename($_FILES[$postAttributeName]['name']);
         
         if(empty($filename))
         {
@@ -89,14 +89,14 @@ class FileServiceProvider implements ProviderInterface, FileService
         return $filename;
     }
     
-    public function getFileSize() {
+    public function getUploadedFileSize($postAttributeName) {
         
         if(!$this->uploadedFileAvailable())
         {
             return false;
         }
         
-        $fileSize = basename($_FILES['upload_file']['size']) / 1024;
+        $fileSize = basename($_FILES[$postAttributeName]['size']) / 1024;
         
         if(empty($fileSize))
         {
@@ -106,14 +106,53 @@ class FileServiceProvider implements ProviderInterface, FileService
         return $fileSize;
     }
     
-    public function getFileType() {
+    public function getUploadedFileSizeString($postAttributeName, $round = 2) {
         
         if(!$this->uploadedFileAvailable())
         {
             return false;
         }
         
-        $fileType = basename($_FILES['upload_file']['type']);
+        $fileSize = basename($_FILES[$postAttributeName]['size']);
+        
+        
+        if(empty($fileSize))
+        {
+            return false;
+        }
+        
+        $fileSize = round($round, 2);
+        
+        $fileSizeString = "";
+        
+        if ($fileSize >= 0 && $fileSize <= 1023) {
+            
+            $fileSizeString = $fileSize . " bytes";
+            
+        } else if ($fileSize >= 1024 && $fileSize <= 1048575) {
+            
+            $fileSizeString = $fileSize . " Mb";
+            
+        } else if ($fileSize >= 1048576 && $fileSize <= 1073741823) {
+            
+            $fileSizeString = $fileSize . " Gb";
+            
+        } else if ($fileSize >= 1073741824 ) {
+            
+            $fileSizeString = $fileSize . " Tb";
+        }
+        
+        return $fileSizeString;
+    } 
+    
+    public function getUploadedFileType($postAttributeName) {
+        
+        if(!$this->uploadedFileAvailable())
+        {
+            return false;
+        }
+        
+        $fileType = basename($_FILES[$postAttributeName]['type']);
         
         if(empty($fileType))
         {
@@ -123,7 +162,7 @@ class FileServiceProvider implements ProviderInterface, FileService
         return $fileType;
     }
     
-    public function getFileExtension($filename) {
+    public function getUploadedFileExtension($filename) {
         
         $start = strpos($filename, ".") + 1;
         
@@ -133,7 +172,7 @@ class FileServiceProvider implements ProviderInterface, FileService
         return substr($filename, $start, $end);
     }
     
-    public function upload($filename)
+    public function upload($postAttributeName, $filename)
     {
         if(!$this->uploadedFileAvailable())
         {
@@ -153,7 +192,7 @@ class FileServiceProvider implements ProviderInterface, FileService
 
         $newFile = $this->fileStore . $filename;
 
-        $result = @move_uploaded_file($_FILES['upload_file']['tmp_name'], $newFile);
+        $result = @move_uploaded_file($_FILES[$postAttributeName]['tmp_name'], $newFile);
 
         if(empty($result))
         {

@@ -66,7 +66,9 @@ class HTTPServiceProvider implements ProviderInterface, HTTPService
 
     public function referer()
     {
-        $referer;
+        global $HTTP_SERVER_VARS;
+        
+        $referer = "";
 
         if (isset($_SERVER) && isset($_SERVER['HTTP_REFERER']))
         {
@@ -103,7 +105,9 @@ class HTTPServiceProvider implements ProviderInterface, HTTPService
 
     public function remoteAddr()
     {
-        $remoteAddr;
+        global $HTTP_SERVER_VARS;
+        
+        $remoteAddr = "";
 
         if (isset($_SERVER) && isset($_SERVER['REMOTE_ADDR']))
         {
@@ -119,7 +123,9 @@ class HTTPServiceProvider implements ProviderInterface, HTTPService
 
     public function remoteHost()
     {
-        $remoteHost;
+        global $HTTP_SERVER_VARS;
+        
+        $remoteHost = "";
 
         $remoteAddr = $this->remoteAddr();
 
@@ -142,7 +148,9 @@ class HTTPServiceProvider implements ProviderInterface, HTTPService
 
     public function userAgent()
     {
-        $browser;
+        global $HTTP_SERVER_VARS;
+        
+        $browser = "";
 
         if (isset($_SERVER) && isset($_SERVER['HTTP_USER_AGENT']))
         {
@@ -154,6 +162,54 @@ class HTTPServiceProvider implements ProviderInterface, HTTPService
         }
 
         return $browser;
+    }
+    
+    public function contentTypeForExtension($extension) {
+        
+        $extension = strtolower($extension);
+        
+        $contentType = "";
+        
+        switch($extension) {
+            
+            // Application
+            case "pdf":
+                $contentType = "application/pdf";
+                break;
+            case "zip":
+                $contentType = "application/zip";
+                break;
+            
+            
+            // Audio
+            
+            
+            // image
+            case "gif":
+                $contentType = "image/gif";
+                break;
+            case "jpeg":
+            case "jpg":
+                $contentType = "image/jpeg";
+                break;
+            case "png":
+                $contentType = "image/png";
+                break;
+            case "tiff":
+                $contentType = "image/tiff";
+                break;
+            
+            // text
+            case "csv":
+                $contentType = "text/csv";
+                break;
+            
+            // video
+            case "mp4":
+                $contentType = "video/mp4";
+                break;
+            
+        }
     }
 }
 

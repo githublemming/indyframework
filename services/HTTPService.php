@@ -75,5 +75,12 @@ interface HTTPService extends ServiceInterface
      * @return string
      */
     public function userAgent();
+    
+    /**
+     * Returns the appropriate MIME content type based on the passed extension.
+     * 
+     * e.g. pdf    would return    application/pdf
+     */
+    public function contentTypeForExtension($extension);
 }
 ?>

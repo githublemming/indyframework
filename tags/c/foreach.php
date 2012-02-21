@@ -12,28 +12,36 @@ class ForEachTag extends BodyTag
     public function doTag()
     {
         $body = $this->getBodyContent();
-               
-        foreach ($this->items as $item) {
+              
+        if (is_array($this->items)) {
+                        
+            foreach ($this->items as $item) {
+
+                $out = $body;
+
+                $elEngine = $this->getELEngine($item);
+                $params = $this->getRequiredParams($out);
+
+                foreach($params as $param) {
+
+                    $stripped = $this->stripPercents($param);
+
+                    $dNotation = '${' . $stripped . '}';   
+
+                    $value = $elEngine->parse($dNotation);
+
+                    $out = str_replace($param, $value, $out);
+                }
+
+                $this->out($out);
+                $this->out("<br/>");
+            } 
+        } else {
             
-            $out = $body;
-            
-            $elEngine = $this->getELEngine($item);
-            $params = $this->getRequiredParams($out);
-            
-            foreach($params as $param) {
-                
-                $stripped = $this->stripPercents($param);
-                
-                $dNotation = '${' . $stripped . '}';   
-                
-                $value = $elEngine->parse($dNotation);
-                
-                $out = str_replace($param, $value, $out);
-            }
-            
-            $this->out($out);
-            $this->out("<br/>");
+            error_log("$this->items  is not and array");
         }
+        
+
     }
     
     private function getRequiredParams($body) {

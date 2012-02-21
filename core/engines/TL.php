@@ -101,7 +101,7 @@ class TL_Engine extends Engine
         $tagName = $this->getTagName($simpleTag);
         $tagNameAndAttribs = $parts[1];
         $firstSpace = strpos($tagNameAndAttribs, " ");
-        
+                
         $attrString = trim(substr($tagNameAndAttribs, $firstSpace + 1, strlen($tagNameAndAttribs) - strlen($tagName)));
                 
         if ($attrString !== "/")
@@ -131,7 +131,7 @@ class TL_Engine extends Engine
                     
                     $attribParts = explode("=", $attribute);
                     
-                    $attribute = $attribParts[0];
+                    $attribute = $attribParts[0];                    
                     $value = $this->dollarNotationEngine->parse($attribParts[1]);
                     
                     $tagInstance->setAttribute($attribute, $value);
