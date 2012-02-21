@@ -32,6 +32,11 @@ abstract class SimpleTag implements Tag
     {        
         $this->buffer[] = $value;
     }
+    
+    protected function getELParser() {
+    
+    	return new EL_Engine($this->pageScope);
+    }
         
     
     // Not happy that this is public !!!

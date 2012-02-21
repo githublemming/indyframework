@@ -70,11 +70,10 @@ class View
             $result = "";
                  
             $tag = $tag[0];
-            
+           
             if (strlen($tag) == 0) continue;
-                                                
-            if (preg_match($simpleTagPattern, $tag) ||
-                preg_match($bodyTagPattern, $tag))
+
+            if (preg_match($simpleTagPattern, $tag) || preg_match($bodyTagPattern, $tag))
             {
                 $this->handleTag($tag);
             }

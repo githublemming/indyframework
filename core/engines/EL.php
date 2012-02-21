@@ -24,10 +24,6 @@ class EL_Engine extends Engine
         
         $el = trim($this->stripDollarNotation($dNotation));
         
-//        if (preg_match(self::STRCONCAT, $dNotation))
-//        {            
-//            $value = $this->concatTwoString($el);
-//        }
         if (preg_match(self::OPERATOR_EQ, $dNotation))
         {            
             $value = $this->processEquation($el);
@@ -88,28 +84,35 @@ class EL_Engine extends Engine
     }
     
     private function processIdentifier($identifier)
-    {
+    {    	
         $value = "";
         
         $periodPos = strpos($identifier, ".");
         if ($periodPos > 0)
         {
             // we have a reference to a object and a method
-            $className = substr($identifier, 0, $periodPos);
-            $method = substr($identifier, $periodPos + 1, strlen($identifier) - ($periodPos + 1));
+            $attribute = substr($identifier, 0, $periodPos);
+            $key = substr($identifier, $periodPos + 1, strlen($identifier) - ($periodPos + 1));
 
-            if ($this->pageScope->attributeExists($className))
-            {               
-                $class = $this->pageScope->getAttribute($className); 
-                
-                // will need to append get before the method name
-                $fullMethodName = "get$method";
-
-                // check if a method exists on the class with the name
-                if (method_exists($class, $fullMethodName))
-                {
-                    $value = $class->$fullMethodName();
-                }
+            if ($this->pageScope->attributeExists($attribute))
+            {         
+            	$object = $this->pageScope->getAttribute($attribute);
+            	
+				if (is_array($object)) {
+					
+					$value = $object[$key];
+					
+				} else {
+					
+					// will need to append get before the method name
+					$fullMethodName = "get$key";
+					
+					// check if a method exists on the class with the name
+					if (method_exists($object, $fullMethodName))
+					{
+						$value = $object->$fullMethodName();
+					}
+				}
             }
         }
         else if (defined($identifier))

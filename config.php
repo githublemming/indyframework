@@ -130,7 +130,7 @@ define('REGEX_SIMPLE_TAG_PATTERN', '<[a-z]+:[a-z]+\s*' . REGEX_TAG_ATTRIBUTE_PAT
 define('REGEX_BODY_OPEN_TAG_PATTERN'  , '<([a-z]+:[a-z]+)\s*' . REGEX_TAG_ATTRIBUTE_PATTERN . '\s*>');
 define('REGEX_BODY_CLOSE_TAG_PATTERN'  , '</\1>');
 define('REGEX_BODY_TAG_PATTERN'  , REGEX_BODY_OPEN_TAG_PATTERN . '.*?' . REGEX_BODY_CLOSE_TAG_PATTERN);
-define('REGEX_DOLLAR_NOTATION', '\$?\{.*?\}');
+define('REGEX_DOLLAR_NOTATION', '\$\{.*?\}');
 
 require_once INDY_CORE. 'engines/Engine.php';
 require_once INDY_CORE. 'engines/EL.php';

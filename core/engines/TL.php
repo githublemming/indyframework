@@ -26,6 +26,9 @@ class TL_Engine extends Engine
         $tagAttributes = $this->getTagAttributes($tag);
         
         $tagPath = $this->tagLibrary->getTag($tagLibrary, $tagName, $tagAttributes);
+        
+        
+        
         if ($tagPath != null)
         {
             require_once $tagPath;
