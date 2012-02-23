@@ -19,7 +19,7 @@ class InstanceState {
 		$this->name = $name;
 	}
 	public function getName() {
-		return $name;
+		return $this->name;
 	}
 	
 }

@@ -67,6 +67,10 @@ class EL_Engine extends Engine
             {                
                 $value = null;
             }
+            else if ($literal === 'now')
+            {
+            	$value = time();
+            }
             else
             {
                 $value = $this->processIdentifier($literal);

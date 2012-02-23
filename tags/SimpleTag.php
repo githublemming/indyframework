@@ -41,7 +41,7 @@ abstract class SimpleTag implements Tag
     
     // Not happy that this is public !!!
     public function setAttribute($attribute, $value) {
-        
+            	
         $this->$attribute = $value;
     }
 }

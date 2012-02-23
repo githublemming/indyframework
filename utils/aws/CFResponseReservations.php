@@ -145,7 +145,7 @@ class CFResponseReservations {
 				
 			} else if (strcmp ($instanceAttribXML->getName(), Instance::INSTANCE_TAG_SET) == 0) {
 				
-				$instance->setTags($this->createSecurityGroups($instanceAttribXML));
+				$instance->setTags($this->createTags($instanceAttribXML));
 				
 			} else if (strcmp ($instanceAttribXML->getName(), Instance::INSTANCE_HYPERVISOR) == 0) {
 				

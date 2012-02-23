@@ -64,7 +64,7 @@ class ForEachTag extends BodyTag
     	
     		$elEngine = $this->getELEngine($item);
     		$params = $this->getRequiredParams($out);
-    	
+    		    	
     		foreach($params as $param) {
     			 
     			$stripped = $this->stripPercents($param);
@@ -72,12 +72,12 @@ class ForEachTag extends BodyTag
     			$dNotation = '${' . $stripped . '}';
     	
     			$value = $elEngine->parse($dNotation);
+    			
     	
     			$out = str_replace($param, $value, $out);
     		}
     	
     		$this->out($out);
-    		$this->out("<br/>");
     	}
     }
     

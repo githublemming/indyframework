@@ -38,6 +38,15 @@
             <required>true</required>
         </attribute>
     </tag>
+    
+    <tag>
+        <name>Import</name>
+        <description>imports the content of a URL-based resource</description>
+        <attribute>
+            <name>url</name>
+            <required>true</required>
+        </attribute>
+    </tag>
 
     <tag>
         <name>If</name>
@@ -57,7 +66,7 @@
         </attribute>
         <attribute>
             <name>var</name>
-            <required>true</required>
+            <required>false</required>
         </attribute>
     </tag>
 </taglib>

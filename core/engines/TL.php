@@ -26,9 +26,7 @@ class TL_Engine extends Engine
         $tagAttributes = $this->getTagAttributes($tag);
         
         $tagPath = $this->tagLibrary->getTag($tagLibrary, $tagName, $tagAttributes);
-        
-        
-        
+
         if ($tagPath != null)
         {
             require_once $tagPath;
@@ -110,7 +108,7 @@ class TL_Engine extends Engine
         if ($attrString !== "/")
         {       
             $dollarNotationPattern = '~[a-z\d]+=\"' . REGEX_DOLLAR_NOTATION . '\"~i';
-            $attribPattern = "~[a-z\d]+=\"[\w\d\s!<>=\+\-\*\/]+\"~i";
+            $attribPattern = "~[a-z\d]+=\"[\w\d\s\.!<>=\+\-\*\/]+\"~i";
                         
             // if there is a slash at the end of the attributes remove it
             $pos = strpos($attrString, "/");

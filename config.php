@@ -125,7 +125,7 @@ define('APPLICATION_VIEW','3');
 
 
 //Define the RegularExpressions used in determining tags and Dollar Notations
-define('REGEX_TAG_ATTRIBUTE_PATTERN', '(?:\s[a-z\d]+=\"[\$\{\w\d\s!<>=\+\-\*\/\}]+\"){0,5}');
+define('REGEX_TAG_ATTRIBUTE_PATTERN', '(?:\s[a-z\d]+=\"[\$\{\w\d\s\.!<>=\+\-\*\/\}]+\"){0,5}');
 define('REGEX_SIMPLE_TAG_PATTERN', '<[a-z]+:[a-z]+\s*' . REGEX_TAG_ATTRIBUTE_PATTERN . '\s*/>');
 define('REGEX_BODY_OPEN_TAG_PATTERN'  , '<([a-z]+:[a-z]+)\s*' . REGEX_TAG_ATTRIBUTE_PATTERN . '\s*>');
 define('REGEX_BODY_CLOSE_TAG_PATTERN'  , '</\1>');
