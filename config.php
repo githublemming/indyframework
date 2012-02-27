@@ -6,7 +6,7 @@
  * An open source application development framework for PHP
  *
  * @author		Mark P Haskins
- * @copyright	Copyright (c) 2010 - 2011, IndyFramework.org
+ * @copyright	Copyright (c) 2010 - 2012, IndyFramework.org
  * @link		http://www.indyframework.org
  */
 
@@ -38,6 +38,8 @@ define('AWS_SDK','aws-sdk-1.5.0/');
  * @package indyframework
  */
 
+
+ini_set("memory_limit","160M");
 
 defined( 'INDY_EXEC' ) or die( 'Restricted access' );
 

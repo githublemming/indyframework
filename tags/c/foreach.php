@@ -24,7 +24,7 @@ class ForEachTag extends BodyTag
 
         } else {
             
-            error_log("$this->items  is not and array");
+            error_log($this->items + "is not and array");
         }
     }
     

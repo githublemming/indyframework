@@ -26,8 +26,6 @@ final class TagLibrary
             $this->isTagPartOfLibrary($tagLibrary, $tagName) &&
             $this->doesTagMatchSignature($tagLibrary, $tagName, $tagAttributes))
         {            
-            // get the tag path and set it on the $tagPath variable to be returned
-            
             $tagsInLibrary = $this->tagLibrary[$tagLibrary];
             $tag = $tagsInLibrary[$tagName];
             
