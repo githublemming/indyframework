@@ -62,7 +62,7 @@ class ApplicationXMLLoader extends BaseApplicationLoader
                 
                 // First load the provider
                 $providerFilePath = $this->getAbsoluteFilePathName($name);
-
+                
                 // check if provider file exists
                 if (file_exists($providerFilePath))
                 {

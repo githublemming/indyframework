@@ -2,12 +2,13 @@
 
 class EL_Engine extends Engine
 {
-    const LITERALS    = '~\$?\{[-\s\w\.]+(?:\.[a-z0-9]*)*\}~i';
-    const LITERALS_DQ = '~\$?\{\"+[\w\d\s]+\"+\}~i';
-    const LITERALS_SQ = '~\$?\{\'+[\w\d\s]+\'+\}~i';
-    const OPERATOR_EQ = '~\$?\{\s*[\"-\w\.]+\s*[!<>=]+\s*[\w\"\.-]+\s*\}~i';
-    const OPERATOR_MA = '~\$?\{\s*[\"-\w\.]+\s*[\+\-\*\/]+\s*[\"-\w\.]+\s*\}~i';
-    const STRCONCAT   = '~\$?\{\s*\".*?\"\s*\+\s*\".*?\"+\s*\}~i';
+    const LITERALS    = '~\$\{[-\s\w\.]+(?:\.[a-z0-9]*)*\}~i';
+    const LITERALS_DQ = '~\$\{\"+[\w\d\s]+\"+\}~i';
+    const LITERALS_SQ = '~\$\{\'+[\w\d\s]+\'+\}~i';
+    const OPERATOR_EQ = '~\$\{\s*[\"-\w\.]+\s*[!<>=]+\s*[\w\"\.-]+\s*\}~i';
+    const OPERATOR_RE = '~\$\{\s*[\"-\w\.]+\s+[eqnltgot]+\s+[\w\"\.-]+\s*\}~i';
+    const OPERATOR_MA = '~\$\{\s*[\"-\w\.]+\s*[\+\-\*\/]+\s*[\"-\w\.]+\s*\}~i';
+    const STRCONCAT   = '~\$\{\s*\".*?\"\s*\+\s*\".*?\"+\s*\}~i';
     
     private $pageScope;
     private $mathEval;
@@ -24,7 +25,11 @@ class EL_Engine extends Engine
         
         $el = trim($this->stripDollarNotation($dNotation));
         
-        if (preg_match(self::OPERATOR_EQ, $dNotation))
+        if (preg_match(self::OPERATOR_RE, $dNotation))
+        {
+        	$value = $this->processRelationship($el);
+        }
+        else if (preg_match(self::OPERATOR_EQ, $dNotation))
         {            
             $value = $this->processEquation($el);
         }
@@ -133,96 +138,134 @@ class EL_Engine extends Engine
         return $value;  
     }
     
+    private function processRelationship($el) 
+    {
+    	$ops = array('eq', 'ne', 'lt', 'gt', 'le', 'ge' );
+    	$elements = $this->getExpressionElements($ops, $el);
+    	
+    	$comparator = $elements[1];
+    	
+    	switch($comparator) {
+    		case "eq":
+    			$comparator = "==";
+    			break;
+    		case "ne":
+    			$comparator = "!=";
+    			break;
+    		case "lt":
+    			$comparator = "<";
+    			break;
+    		case "gt":
+    			$comparator = ">";
+    			break;
+    		case "le":
+    			$comparator = "<=";
+    			break;
+    		case "ge":
+    			$comparator = ">=";
+    			break;
+    	}
+    	
+    	$value1 = $this->processLiteral($elements[0]);
+    	$value2 = $this->processLiteral($elements[2]);
+    	    	    	
+    	return $this->compare($value1, $comparator, $value2);
+    }
+    
     private function processEquation($el)
-    {        
-        $value = false;
-                
-        $exprArray = str_split($el);
-        $exprCount = count($exprArray);
+    {
+    	$ops = array('>', '>=', '<', '<=', '==', '!=' );
+    	
+    	$elements = $this->getExpressionElements($ops, $el);
 
-        $result = array();
-        $currentIndex = 0;
-        $currentChar = "";
-
-        $ops = array('>', '>=', '<', '<=', '==', '!=' );
-        $expecting_op = false;
-
-        for($i=0; $i < $exprCount; $i++)
-        {    
-            $c = $exprArray[$i];
-
-            if ($c == " " ||  $c == "'"  || $c == '"' ) continue;
-
-            $j = $i + 1;
-            if ($j < $exprCount)
-            {
-                $nextc = $exprArray[$i + 1];
-                $op = $c . $nextc;
-                $op = trim($op);  
-
-                if (!in_array($op, $ops))
-                {
-                    unset($op);
-                }
-            }
-                        
-            if ($c == "-" && !$expecting_op)
-            {
-                $currentChar .= $c;
-            }
-            else if (isset($op) && in_array($op, $ops))
-            {
-                $result[$currentIndex] = $currentChar;
-                $currentIndex ++;
-                $currentChar = "";
-
-                $result[$currentIndex] = $op;
-                $currentIndex ++;
-
-                $expecting_op = false;
-
-                $i++;
-            }
-            else
-            {
-                $currentChar .= $c;
-                $expecting_op = true;
-            }
-        }
-
-        $result[$currentIndex] = $currentChar;
-
-        $value1 = $this->processLiteral($result[0]);
-        $value2 = $this->processLiteral($result[2]);
-
-        switch($result[1])
-        {
-            case ">":
-                $value = $value1 > $value2;
-                break;
-            case "<":
-                $value = $value1 < $value2;
-                break;
-            case ">=":
-                $value = $value1 >= $value2;
-                break;
-            case "<=":
-                $value = $value1 <= $value2;
-                break;
-            case "==":
-                $value = $value1 == $value2;
-                break;
-            case "!=":
-                $value = $value1 != $value2;
-                break;
-        }  
-      
-        if (strlen($value) == 0)
-        {
-            $value = 0;
-        }
-                
-        return $value;
+        $value1 = $this->processLiteral($elements[0]);
+        $value2 = $this->processLiteral($elements[2]);
+        
+        return $this->compare($value1, $elements[1], $value2);
+    }
+    
+    private function getExpressionElements($ops, $el) {
+    	
+    	$exprArray = str_split($el);
+    	$exprCount = count($exprArray);
+    	
+    	$result = array();
+    	$currentIndex = 0;
+    	$currentChar = "";
+    	
+    	$expecting_op = false;
+    	
+    	for($i=0; $i < $exprCount; $i++)
+    	{
+    		$c = $exprArray[$i];
+    	
+    		if ($c == " " ||  $c == "'"  || $c == '"' ) continue;
+    	
+    		$j = $i + 1;
+    		if ($j < $exprCount) {
+    			$nextc = $exprArray[$i + 1];
+    			$op = $c . $nextc;
+    			$op = trim($op);
+    	
+    			if (!in_array($op, $ops)) {
+    				unset($op);
+    			}
+    		}
+    	
+    		if ($c == "-" && !$expecting_op) {
+    			$currentChar .= $c;
+    		} else if (isset($op) && in_array($op, $ops)) 	{
+    				$result[$currentIndex] = $currentChar;
+    				$currentIndex ++;
+    				$currentChar = "";
+    	
+    				$result[$currentIndex] = $op;
+    				$currentIndex ++;
+    	
+    				$expecting_op = false;
+    	
+    				$i++;
+    		} else {
+    			$currentChar .= $c;
+    			$expecting_op = true;
+    		}
+    	}
+    	
+    	$result[$currentIndex] = $currentChar;	
+    	
+    	return $result;    	
+    }
+    
+    private function compare($left, $comparator, $right) {
+    	
+    	$value = false;
+    	
+    	switch($comparator) {
+    		case ">":
+    			$value = $left > $right;
+    			break;
+    		case "<":
+    			$value = $left < $right;
+    			break;
+    		case ">=":
+    			$value = $left >= $right;
+    			break;
+    		case "<=":
+    			$value = $left <= $right;
+    			break;
+    		case "==":
+    			$value = $left == $right;
+    			break;
+    		case "!=":
+    			$value = $left != $right;
+    			break;
+    	}
+    	
+    	if (strlen($value) == 0) {
+    		$value = 0;
+    	}
+    	
+    	return $value;
     }
     
     private function processMath($el)

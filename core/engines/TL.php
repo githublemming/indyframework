@@ -116,7 +116,7 @@ class TL_Engine extends Engine
             {
                 $attrString = trim(substr($attrString, 0, strlen($attrString) - 1));
             }
-                        
+                                    
             if (preg_match($dollarNotationPattern, $attrString))
             {
                 if (!isset ($this->dollarNotationEngine))
@@ -128,8 +128,7 @@ class TL_Engine extends Engine
                 preg_match_all($dollarNotationPattern, $attrString, $tags, PREG_SET_ORDER);
                 foreach($tags as $attribute)
                 {   
-                    $attribute = $attribute[0];  
-                    
+                    $attribute = $attribute[0];
                     $attribParts = explode("=", $attribute);
                     
                     $attribute = $attribParts[0];                    
@@ -143,7 +142,7 @@ class TL_Engine extends Engine
             $attribs = array();
             preg_match_all($attribPattern, $attrString, $attribs, PREG_SET_ORDER);
             foreach ($attribs as $a)
-            {            
+            {                        	
                 $keyValue = explode("=", $a[0]);
 
                 $attribute = strtolower($keyValue[0]);
