@@ -1,5 +1,23 @@
 <?php
 
+/**
+ * Indy Framework
+ *
+ * An open source application development framework for PHP
+ *
+ * @author		Mark P Haskins
+ * @copyright	Copyright (c) 2010 - 2012, Mark P Haskins
+ * @link		http://www.marksdevserver.com
+ */
+
+/**
+ * Indy Framework Set Tag.
+ *
+ * Tag that prints a value that is stored in the pagescope to the page.
+ *
+ * @package indyframework/core
+ */
+
 require_once INDY_TAGS. '/SimpleTag.php';
 
 class OutTag extends SimpleTag

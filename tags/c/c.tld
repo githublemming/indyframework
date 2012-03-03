@@ -19,7 +19,7 @@
 
     <tag>
         <name>Set</name>
-        <description>Saved data to a PageScope variable</description>
+        <description>Saves data to a PageScope variable</description>
         <attribute>
             <name>var</name>
             <required>true</required>
