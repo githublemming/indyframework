@@ -1,4 +1,24 @@
 <?php
+/**
+ * Indy Framework
+ *
+ * An open source application development framework for PHP
+ *
+ * @author		Mark P Haskins
+ * @copyright	Copyright (c) 2010 - 2012, Mark P Haskins
+ * @link		http://www.marksdevserver.com
+ */
+
+/**
+ * Indy Framework Tag Library Engine.
+ *
+ * Given a Tag as a string it attempts to find and load the tag into memory,
+ * assigning any attributes before returning it.
+ *
+ * @package indyframework/core
+ */
+
+require_once 'Engine.php';
 
 class TL_Engine extends Engine
 {
@@ -12,8 +32,9 @@ class TL_Engine extends Engine
 
     public function __construct(&$pageScope)
     {        
+    	parent::__construct();
+    	
         $this->tagLibrary = TagLibrary::instance();
-        
         $this->pageScope = $pageScope;
     }
     
@@ -27,7 +48,7 @@ class TL_Engine extends Engine
         
         $tagPath = $this->tagLibrary->getTag($tagLibrary, $tagName, $tagAttributes);
 
-        if ($tagPath != null)
+        if ($tagPath != null && file_exists($tagPath))
         {
             require_once $tagPath;
 
@@ -35,6 +56,10 @@ class TL_Engine extends Engine
             $tagInstance = new $className($tag, $this->pageScope);
             
             $this->setAttributesOnTag($tagInstance, $tag);
+            
+        } else {
+        	
+        	$this->logger->log(Logger::LOG_LEVEL_WARNING, 'getTagInstance', "Unable to load Tag : $tag");
         }
         
         return $tagInstance;
@@ -86,7 +111,7 @@ class TL_Engine extends Engine
             {            
                 $keyValue = explode("=", $a[0]);
 
-                $key = strtolower($keyValue[0]);
+                $key = $keyValue[0];
                 $attributes[] = $key;   
             }
         }
@@ -173,7 +198,7 @@ class TL_Engine extends Engine
         
         $firstSpace = strpos($tagNameAndAttribs, " ");
         
-        return strtolower(substr($tagNameAndAttribs, 0, $firstSpace));
+        return substr($tagNameAndAttribs, 0, $firstSpace);
     }
 }
 

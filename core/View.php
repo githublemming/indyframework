@@ -1,5 +1,25 @@
 <?php
 
+/**
+ * Indy Framework
+ *
+ * An open source application development framework for PHP
+ *
+ * @author		Mark P Haskins
+ * @copyright	Copyright (c) 2010 - 2012, Mark P Haskins
+ * @link		http://www.marksdevserver.com
+ */
+
+/**
+ * Indy Framework View class.
+ *
+ * Loads, parses and displays a view.
+ *
+ * @package indyframework/core
+ */
+
+require_once INDY_CORE . '/scopes/Scope.php';
+
 class View
 {
     private $REGEX_COMBINED;
@@ -13,7 +33,13 @@ class View
     
     private $logger;
     
-    public function __construct(&$pageScope)
+    /**
+     * Default Constructor.
+     * 
+     * @param Scope $pageScope reference to a Scope that holds values that might
+     * be required by the view.
+     */
+    public function __construct(Scope &$pageScope = null)
     {
         $this->REGEX_COMBINED = "~" . 
                                 REGEX_DOLLAR_NOTATION . "|" . 
@@ -35,12 +61,19 @@ class View
 	 */
     public function display($fileName)
     {    	
-        $view = file_get_contents($fileName);
-        $this->view = '?>' . $view; 
-        
-        $this->processTags(); 
-          
-        eval ($this->view);
+    	if (file_exists($fileName)) {
+    		
+    		$view = file_get_contents($fileName);
+    		$this->view = '?>' . $view;
+    		
+    		$this->processTags();
+    		
+    		eval ($this->view);
+    		
+    	} else {
+    		
+    		$this->displayError("Can't load view : " . $fileName);
+    	}
     }
     
 	/**
@@ -56,6 +89,9 @@ class View
         return $this->view;
     }
         
+    ///////////////////////////////////////////////////////////////////////////
+    ///// Private Functions
+    ///////////////////////////////////////////////////////////////////////////
     private function processTags()
     {
         $dollarNotationPattern = "~" . REGEX_DOLLAR_NOTATION . "~i";
@@ -75,13 +111,11 @@ class View
             
             if (preg_match($simpleTagPattern, $tag) || preg_match($bodyTagPattern, $tag))
             {
-            	
                 $this->handleTag($tag);
             }
             else if (preg_match($dollarNotationPattern, $tag))
             {
                 $this->logger->log(Logger::LOG_LEVEL_DEBUG, 'View: processTags', "Found ExpLang [$tag]");
-                
                 $result = $this->EL_Engine->parse($tag);
             }
                         
@@ -96,9 +130,12 @@ class View
     {
         $tagInstance =  $this->TL_Engine->getTagInstance($tag);
         
-        $result = $tagInstance->run();
-        
-        $this->update($tag, $result);
+        if ($tagInstance != null) {
+        	
+        	$result = $tagInstance->run();
+        	
+        	$this->update($tag, $result);
+        }
     }
     
     private function update($tag, $value)
@@ -106,7 +143,7 @@ class View
         $this->view = $this->str_replace_once($tag, $value, $this->view);
     }
     
-    function str_replace_once($str_pattern, $str_replacement, $string)
+    private function str_replace_once($str_pattern, $str_replacement, $string)
     {
         $updatedString = $string;
         
@@ -114,10 +151,20 @@ class View
         {
             $occurrence = strpos($string, $str_pattern);
             
-            $updatedString =  substr_replace($string, $str_replacement, strpos($string, $str_pattern), strlen($str_pattern));
+            $updatedString = substr_replace($string, $str_replacement, strpos($string, $str_pattern), strlen($str_pattern));
         }
        
         return $updatedString;
+    }
+    
+    private function displayError($message) {
+    	
+    	$scope = new PageScope();
+    	$scope->setAttribute("Message", $message());
+    	$scope->setAttribute("Exception", "");
+    	
+    	$errorView = new View($scope);
+    	$errorView->display( INDY_PATH . "/view/error.view.php" );
     }
 }
 ?>

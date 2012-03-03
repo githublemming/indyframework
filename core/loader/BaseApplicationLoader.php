@@ -6,8 +6,8 @@
  * An open source application development framework for PHP
  *
  * @author		Mark P Haskins
- * @copyright	Copyright (c) 2010 - 2011, IndyFramework.org
- * @link		http://www.indyframework.org
+ * @copyright	Copyright (c) 2010 - 2012, Mark P Haskins
+ * @link		http://www.marksdevserver.com
  */
 
 /**
@@ -36,7 +36,7 @@ abstract class BaseApplicationLoader
         $this->serviceRepository = new ServiceRepository();
 
         $this->logger = Logger::getLogger();
-
+        
         $this->prepareApplication();
     }
 
@@ -85,9 +85,9 @@ abstract class BaseApplicationLoader
         {
             unset($providerFilePath);
 
-            $this->logger->log(Logger::LOG_LEVEL_CRITICAL, 'Application Loader', "Unable to load $line : Can't find it", null);
+            $this->logger->log(Logger::LOG_LEVEL_CRITICAL, 'Application Loader', "Unable to load $providerFilePath : Can't find it", null);
 
-            throw new ApplicationException("Unable to load $line : Can't find it");
+            throw new ApplicationException("Unable to load $providerFilePath : Can't find it");
         }
     }
 
@@ -121,7 +121,7 @@ abstract class BaseApplicationLoader
         {
             $providerFile = APPLICATION_PATH . $providerFile;
         }
-
+        
         return $providerFile;
     }
 

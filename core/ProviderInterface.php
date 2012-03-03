@@ -6,8 +6,8 @@
  * An open source application development framework for PHP
  *
  * @author		Mark P Haskins
- * @copyright	Copyright (c) 2010 - 2011, IndyFramework.org
- * @link		http://www.indyframework.org
+ * @copyright	Copyright (c) 2010 - 2012, Mark P Haskins
+ * @link		http://www.marksdevserver.com
  */
 
 /**
@@ -16,8 +16,7 @@
  * @package indyframework/core
  */
 
-interface ProviderInterface
-{
+interface ProviderInterface {
     /**
      * Message about the state of the application will be recieved via this
      * function.

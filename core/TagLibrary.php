@@ -1,12 +1,32 @@
 <?php
 
+/**
+ * Indy Framework
+ *
+ * An open source application development framework for PHP
+ *
+ * @author		Mark P Haskins
+ * @copyright	Copyright (c) 2010 - 2012, Mark P Haskins
+ * @link		http://www.marksdevserver.com
+ */
+
+/**
+ * Indy Framework Tag Library class.
+ *
+ * The Tag Library holds all known tags.
+ *
+ * @package indyframework/core
+ */
+
 final class TagLibrary
 {
     private static $instance;
     
     private $tagLibrary = array();
         
-    private function __construct() { }
+    private function __construct() {
+    	$this->logger = Logger::getLogger();
+    }
     
     public function instance()
     {
@@ -25,7 +45,7 @@ final class TagLibrary
         if ($this->isValidTagLibrary($tagLibrary) && 
             $this->isTagPartOfLibrary($tagLibrary, $tagName) &&
             $this->doesTagMatchSignature($tagLibrary, $tagName, $tagAttributes))
-        {            
+        {      
             $tagsInLibrary = $this->tagLibrary[$tagLibrary];
             $tag = $tagsInLibrary[$tagName];
             
@@ -43,7 +63,9 @@ final class TagLibrary
         {
             $isValidTagLibrary = $this->loadLibraryDefinition($libraryName);
         }
-                     
+
+        $this->logger->log(Logger::LOG_LEVEL_DEBUG, 'isValidTagLibrary', "$libraryName : $isValidTagLibrary");
+        
         return $isValidTagLibrary;  
     }
     
@@ -60,6 +82,8 @@ final class TagLibrary
         
         $isTagPartOfLibrary = array_key_exists($tagName, $tagsInLibrary);
                 
+        $this->logger->log(Logger::LOG_LEVEL_DEBUG, 'isTagPartOfLibrary', "[$libraryName] $tagName : $isTagPartOfLibrary");
+        
         return $isTagPartOfLibrary;
     }
     
@@ -84,6 +108,8 @@ final class TagLibrary
         {
             $doesTagMatchSignature = true;
         }
+        
+        $this->logger->log(Logger::LOG_LEVEL_DEBUG, 'isTagPartOfLibrary', "[$libraryName] $tagName : $doesTagMatchSignature");
         
         return $doesTagMatchSignature;
     }
@@ -119,10 +145,10 @@ final class TagLibrary
             $tags = array();
 
             foreach($xml->tag as $tag)
-            {                
+            {                    	
                 $tagDefinition = $this->loadTagDefinition($tag, $tagPath);
-
-                $tagName = strtolower($tagDefinition->getName());
+                
+                $tagName = (string)$tagDefinition->getName();
                 $tags[$tagName] = $tagDefinition;
             }
 
@@ -131,11 +157,13 @@ final class TagLibrary
             $definitionLoadedOK = true;
         }
         
+        $this->logger->log(Logger::LOG_LEVEL_DEBUG, 'loadLibraryDefinition', "$tagLibrary : $definitionLoadedOK");
+        
         return $definitionLoadedOK;
     }
         
     private function loadTagDefinition($tag, $tagPath)
-    {
+    {    	
         $tagDefinition = new TagDefinition;
         
         $tagDefinition->setName($tag->name);
@@ -145,12 +173,14 @@ final class TagLibrary
         {        
             if ($this->isAttributeElement($tagProperty->getName()))
             {
-                $attrName = strtolower($tagProperty->name);
+            	$attrName = $tagProperty->name;
                 $attrRequired = $tagProperty->required;
                 
                 $tagDefinition->addAttribute($attrName, $attrRequired);
             }
         }
+        
+        $this->logger->log(Logger::LOG_LEVEL_DEBUG, 'loadTagDefinition', "$tag [$tagPath] : " . $tagDefinition->getName());
         
         return $tagDefinition;
     }
@@ -159,8 +189,8 @@ final class TagLibrary
     {
         $isAttributeElement = true;
         
-        if ($elementName === "name" ||
-            $elementName === "description")
+        if (strcasecmp($elementName, "name") == 0 ||
+            strcasecmp($elementName, "description") == 0)
         {
             $isAttributeElement = false;
         }

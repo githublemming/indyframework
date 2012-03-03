@@ -6,8 +6,8 @@
  * An open source application development framework for PHP
  *
  * @author		Mark P Haskins
- * @copyright	Copyright (c) 2010 - 2011, IndyFramework.org
- * @link		http://www.indyframework.org
+ * @copyright	Copyright (c) 2010 - 2012, Mark P Haskins
+ * @link		http://www.marksdevserver.com
  */
 
 /**
@@ -35,11 +35,12 @@ define( 'APPLICATION_PATH', dirname(__FILE__) . '/../' );
 
 
 
-// load the configuration file
+// load the configuration file, which in turns load all the files required for
+// the framework to work
 require_once(INDY_PATH . 'config.php');
 
 
-// now load the Indy Framework
+// Now load the application by loading and parsing the application.xml file.
 try
 {
     require_once(INDY_CORE . 'loader/ApplicationXMLLoader.php');
@@ -53,8 +54,14 @@ catch (ApplicationException $e)
                  "An exception was thrown building the application, check the logging and fix the problem.",
                  $e);
 
+    $scope = new PageScope();
+    $scope->setAttribute("Message", "An exception was thrown building the application, check the logging and fix the problem : " . $e->getMessage());
+    $scope->setAttribute("Exception", $e);
+    
+    $errorView = new View($scope);
+    $errorView->display( INDY_PATH . "/view/error.view.php" );
+    
     exit;
-
 }
 
 /**

@@ -57,13 +57,26 @@ class AWSElasticLoadBalancerServiceProvider implements ProviderInterface, AWSEla
     ////////////////////////////////////////////////////////////////////////////
     ///// Implementation of the CookieService interface
     ////////////////////////////////////////////////////////////////////////////
-    public function registerInstance($elbName, array $instances) {
+    public function registerInstance($elbName, array $instanceIds) {
     	
-    	$this->aws_elb->register_instances_with_load_balancer($elbName, $instances);
+    	return $this->aws_elb->register_instances_with_load_balancer($elbName, $this->formatArray($instanceIds));
     }
     
-    public function deregisterInstance($elbName, array $instances) {
+    public function deregisterInstance($elbName, array $instanceIds) {
     	
-    	$this->aws_elb->deregister_instances_from_load_balancer($elbName, $instances);
+    	return $this->aws_elb->deregister_instances_from_load_balancer($elbName, $this->formatArray($instanceIds));
+    }
+    
+    private function formatArray(array $instanceIds) {
+    	
+    	$formattedArray = array();
+    	
+    	foreach($instanceIds as $instanceId) {
+    		
+    		$formattedArray[] = array('InstanceId' => $instanceId);
+    		
+    	}
+    	
+    	return $formattedArray;
     }
 }

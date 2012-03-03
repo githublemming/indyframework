@@ -1,7 +1,24 @@
 <?php
 
-class AbstractPage
-{
+/**
+ * Indy Framework
+ *
+ * An open source application development framework for PHP
+ *
+ * @author		Mark P Haskins
+ * @copyright	Copyright (c) 2010 - 2012, Mark P Haskins
+ * @link		http://www.marksdevserver.com
+ */
+
+/**
+ * Pages, that is top level PHP files that provide a web page e.g. index.php,
+ * should extend this abstract class.
+ *
+ * @package indyframework/core
+ */
+ 
+class AbstractPage {
+	
     private $pageScope;
     private $view;
     

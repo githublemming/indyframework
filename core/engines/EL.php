@@ -1,5 +1,24 @@
 <?php
 
+/**
+ * Indy Framework
+ *
+ * An open source application development framework for PHP
+ *
+ * @author		Mark P Haskins
+ * @copyright	Copyright (c) 2010 - 2012, Mark P Haskins
+ * @link		http://www.marksdevserver.com
+ */
+
+/**
+ * Indy Framework Expression Language Engine.
+ *
+ * Given a Notation e.g. ${abc} it attempts to resolve the notation to a value
+ * currently held in the PageContext and if it can find it returns the value.
+ *
+ * @package indyframework/core
+ */
+
 class EL_Engine extends Engine
 {
     const LITERALS    = '~\$\{[-\s\w\.]+(?:\.[a-z0-9]*)*\}~i';
@@ -62,17 +81,17 @@ class EL_Engine extends Engine
             $value = $literal;
         }
         else
-        {
-            if ($literal === 'true' ||
-                $literal === 'false')
+        {        	
+            if (strcasecmp($literal, "true") == 0 ||
+                strcasecmp($literal, "false") == 0)
             {
                 $value = $literal;
             }
-            else if ($literal === 'null')
+            else if (strcasecmp($literal, "null") == 0)
             {                
                 $value = null;
             }
-            else if ($literal === 'now')
+            else if (strcasecmp($literal, "now") == 0)
             {
             	$value = time();
             }
@@ -93,7 +112,7 @@ class EL_Engine extends Engine
     }
     
     private function processIdentifier($identifier)
-    {    	
+    {
         $value = "";
         
         $periodPos = strpos($identifier, ".");

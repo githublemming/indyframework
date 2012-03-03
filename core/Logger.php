@@ -6,8 +6,8 @@
  * An open source application development framework for PHP
  *
  * @author		Mark P Haskins
- * @copyright	Copyright (c) 2010 - 2011, IndyFramework.org
- * @link		http://www.indyframework.org
+ * @copyright	Copyright (c) 2010 - 2012, Mark P Haskins
+ * @link		http://www.marksdevserver.com
  */
 
 /**
@@ -16,8 +16,7 @@
  * @package indyframework/core
  */
 
-class Logger
-{
+class Logger {
     const LOG_LEVEL_DEBUG    = 1;
     const LOG_LEVEL_INFO     = 2;
     const LOG_LEVEL_WARNING  = 3;
@@ -162,7 +161,7 @@ class Logger
         
         if (isset ($exception))
         {
-            $output .= $exception->exceptionType . " ";
+            $output .= $exception->getExceptionType() . " ";
         }
 
         $output .= $logLevelDesc . " : ";

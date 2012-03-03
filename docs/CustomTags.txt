@@ -1,0 +1,8 @@
+On of the really useful aspects of developing a website using Java was the ability
+to create your own Custom Tags. These tags could used along side other standard
+HTML tags in your page view. This served at least two functions 
+
+1) it kept your markup code free
+2) it provided the capability for whoever was responsible for writing the markup
+   to add come logic into the page without resorting to Javascript
+   

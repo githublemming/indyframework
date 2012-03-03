@@ -6,8 +6,8 @@
  * An open source application development framework for PHP
  *
  * @author		Mark P Haskins
- * @copyright	Copyright (c) 2010 - 2011, IndyFramework.org
- * @link		http://www.indyframework.org
+ * @copyright	Copyright (c) 2010 - 2012, Mark P Haskins
+ * @link		http://www.marksdevserver.com
  */
 
 /**
@@ -25,13 +25,13 @@ require_once 'BaseApplicationLoader.php';
 /**
  * Application loader that reading in an XML file and builds the application
  */
-class ApplicationXMLLoader extends BaseApplicationLoader
-{
-    protected function prepareApplication()
-    {
-        $this->loadProviders();
-        
-        $this->initialisedProviders();
+class ApplicationXMLLoader extends BaseApplicationLoader {
+	
+    protected function prepareApplication() {	
+    	
+    	$this->loadProviders();
+    		
+    	$this->initialisedProviders();
     }
 
     private function loadProviders()
