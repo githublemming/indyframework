@@ -50,6 +50,8 @@ class TL_Engine extends Engine
 
         if ($tagPath != null && file_exists($tagPath))
         {
+        	error_log($tagPath);
+        	
             require_once $tagPath;
 
             $className = ucfirst($tagName) . "Tag";

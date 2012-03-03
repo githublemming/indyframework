@@ -5,7 +5,7 @@
     <description>Provides the formatting functionality tags</description>
 
     <tag>
-        <name>formatDate</name>
+        <name>FormatDate</name>
         <description> Formats a date and/or time</description>
         <attribute>
             <name>value</name>
