@@ -61,4 +61,35 @@ class AWSS3ServiceProvider implements ProviderInterface, AWSS3Service
     	
     	return $response;
     }
+    
+    public function sendBatchCopy(array $requests) {
+    	
+    	$response = "Nothing Sent";
+    	
+    	$added = 0;
+    	foreach ($requests as $request) {
+    		
+     		if (array_key_exists('source', $request) && array_key_exists('destination', $request))  {
+    			
+    			$source = $request['source'];
+    			$destination = $request['destination'];
+    			$opts = null;
+    			
+    			if (array_key_exists('opts', $request)) {
+    				
+    				$opts = $request['opts'];
+   				}
+    			
+    			$this->aws_s3->batch()->copy_object($source, $destination, $opts);
+    			$added = $added + 1;
+     		}
+    	}
+    	
+    	if ($added > 0) {
+    		
+    		$response = $this->aws_s3->batch()->send();
+    	}
+    	
+    	return $response;
+    }
 }

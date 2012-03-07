@@ -18,7 +18,6 @@
  * @package indyframework/core
  */
 
-
 require_once INDY_TAGS. '/BodyTag.php';
 
 class ForEachTag extends BodyTag
