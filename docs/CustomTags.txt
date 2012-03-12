@@ -1,8 +1,34 @@
-On of the really useful aspects of developing a website using Java was the ability
+One of the really useful aspects of developing a website using Java was the ability
 to create your own Custom Tags. These tags could used along side other standard
 HTML tags in your page view. This served at least two functions 
 
 1) it kept your markup code free
 2) it provided the capability for whoever was responsible for writing the markup
-   to add come logic into the page without resorting to Javascript
-   
+   to add come logic into the page without resorting to Javascript.
+
+Indy comes with a couple of tags already that are aimed at making life a bit easier
+some of these are:
+
+ForEach  : A loop mechanism just the thing for putting data on a page
+If       : A condition tag
+Import   : Acts as Required, loads the file into the position on the page
+Out      : places a value in the page scope on the page
+Remove   : removed a value from the page scope
+Set      : sets a value on the page scope
+
+Creating your own tag is fairly simple:
+
+* you create a class
+* extends either SimpleTag or BodyTag depending on your needs
+* put your code in the doTag function.
+
+Things to remember when creating tag, your code could be used on a variety of
+platforms, some are case sensitive, some are case insensitive so you should follow
+these naming conventions
+
+* The class name should be the same as the file name with Tag appended on to it
+  e.g ForEach.php  -> ForEachTag
+* Your defintion should be the same as the file name and the class name e,g
+    <tag>
+        <name>ForEach</name>
+    </tag>

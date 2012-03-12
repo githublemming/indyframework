@@ -1,0 +1,39 @@
+Dollar notation is an implementation of an Expression Language, you use it to
+make outputting dynamic values to you page easier, it can also be used for basic
+conditional expressions.
+
+It works with primitive values (that is ints, strings, etc), with classes and with
+arrays.
+
+A simple example of using Dollar Notation to keep your HTML clear of PHP script.
+
+In your logic code, you add some attributes to the pagescope like this.
+
+$this->setAttribute('user',  $user);          // $user is a Model class
+$this->setAttribute('music_videos', $videos); // $videos is an array
+
+Then in your HTML you can access these values like this
+
+/** name equates to getName() on the model **/
+<div class="loggedIn">${user.name}</div> 
+
+
+/** loop around all the elements in the array and output the values.
+    As you can see video must be a Model as we are accessing functions on it.
+**/
+<c:ForEach items="${music_videos}" var="video">
+<tr id="row%video.id%"><td>%video.artist%</td><td>%video.song%</td></tr>
+</c:ForEach>
+
+
+There are also some basic maths rules and conditions that you can use.
+
+e.g. 
+
+<c:If test="${10 > 5}">
+This will only be shown if 10 is greater than 5
+</c:If>
+
+and 
+
+<c:Out value="${10 * 5}"/>
