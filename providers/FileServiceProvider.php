@@ -58,7 +58,7 @@ class FileServiceProvider implements ProviderInterface, FileService
 
         if ($_FILES[$postAttributeName]['error'] > 0) {
             
-            echo "Error: " . $_FILES["file"]["error"];
+            echo "Error: " . $_FILES[$postAttributeName]["error"];
             
         } else {
         
@@ -74,7 +74,7 @@ class FileServiceProvider implements ProviderInterface, FileService
     
     public function uploadedFileName($postAttributeName) {
         
-        if(!$this->uploadedFileAvailable())
+        if(!$this->uploadedFileAvailable($postAttributeName))
         {
             return false;
         }
@@ -89,9 +89,9 @@ class FileServiceProvider implements ProviderInterface, FileService
         return $filename;
     }
     
-    public function getUploadedFileSize($postAttributeName) {
+    public function uploadedFileSize($postAttributeName) {
         
-        if(!$this->uploadedFileAvailable())
+        if(!$this->uploadedFileAvailable($postAttributeName))
         {
             return false;
         }
@@ -106,9 +106,9 @@ class FileServiceProvider implements ProviderInterface, FileService
         return $fileSize;
     }
     
-    public function getUploadedFileSizeString($postAttributeName, $round = 2) {
+    public function uploadedFileSizeString($postAttributeName, $round = 2) {
         
-        if(!$this->uploadedFileAvailable())
+        if(!$this->uploadedFileAvailable($postAttributeName))
         {
             return false;
         }
@@ -145,9 +145,9 @@ class FileServiceProvider implements ProviderInterface, FileService
         return $fileSizeString;
     } 
     
-    public function getUploadedFileType($postAttributeName) {
+    public function uploadedFileType($postAttributeName) {
         
-        if(!$this->uploadedFileAvailable())
+        if(!$this->uploadedFileAvailable($postAttributeName))
         {
             return false;
         }
@@ -162,7 +162,7 @@ class FileServiceProvider implements ProviderInterface, FileService
         return $fileType;
     }
     
-    public function getUploadedFileExtension($filename) {
+    public function uploadedFileExtension($filename) {
         
         $start = strpos($filename, ".") + 1;
         
@@ -174,7 +174,7 @@ class FileServiceProvider implements ProviderInterface, FileService
     
     public function upload($postAttributeName, $filename)
     {
-        if(!$this->uploadedFileAvailable())
+        if(!$this->uploadedFileAvailable($postAttributeName))
         {
             $this->logger->log(Logger::LOG_LEVEL_WARNING,
                               'FileServiceProvider: upload',
@@ -182,7 +182,7 @@ class FileServiceProvider implements ProviderInterface, FileService
             return false;
         }
 
-        if(!$this->uploadedFileName())
+        if(!$this->uploadedFileName($postAttributeName))
         {
             $this->logger->log(Logger::LOG_LEVEL_WARNING,
                               'FileServiceProvider: upload',

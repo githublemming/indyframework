@@ -19,7 +19,7 @@ interface FileService extends ServiceInterface
     /**
      * Returns the size of the file in Kb e.g. 1234
      */
-    public function getUploadedFileSize($postAttributeName);
+    public function uploadedFileSize($postAttributeName);
     
     /**
      * Returns the size of the file in a friendly string such as
@@ -32,12 +32,12 @@ interface FileService extends ServiceInterface
      * @param round the number of deciminal places to round the size too. This
      * defaults to 2.
      */
-    public function getUploadedFileSizeString($postAttributeName, $round = 2);
+    public function uploadedFileSizeString($postAttributeName, $round = 2);
     
     /**
      * Returns the type of the file. 
      */
-    public function getUploadedFileType($postAttributeName);
+    public function uploadedFileType($postAttributeName);
     
     /**
      * Checks to see if a file is in the HTTP POST FILES array, and if there is
@@ -51,7 +51,7 @@ interface FileService extends ServiceInterface
     /**
      * Returns the extension of the supplied file. 
      */
-    public function getUploadedFileExtension($filename);
+    public function uploadedFileExtension($filename);
 }
 
 ?>
