@@ -22,7 +22,7 @@ require_once INDY_TAGS. '/BodyTag.php';
 
 class ForEachTag extends BodyTag
 {
-    const REGEX_TAG_VARIABLE = "~%{1}[a-z\d\.]+%{1}~";
+    const REGEX_TAG_VARIABLE = "~%{1}[_a-z\d\.]+%{1}~";
         
     protected $items;
     protected $var;
@@ -57,6 +57,7 @@ class ForEachTag extends BodyTag
     	
     	$body = $this->getBodyContent();
     	
+        $forEachId = 0;
     	foreach ($this->items as $key => $value) {
     		 
     		$out = $body;
@@ -64,6 +65,7 @@ class ForEachTag extends BodyTag
     		 
     		foreach($params as $param) {
     	
+                $out = str_replace("%__index__", $forEachId, $out);
     			$out = str_replace("%key%", $key, $out);
     			$out = str_replace("%value%", $value, $out);
     		}
@@ -76,8 +78,11 @@ class ForEachTag extends BodyTag
     	
     	$body = $this->getBodyContent();
     	
+        $forEachId = 0;
     	foreach ($this->items as $item) {
     		 
+            $forEachId = $forEachId + 1;
+            
     		$out = $body;
     	
     		$elEngine = $this->getELEngine($item);
@@ -87,12 +92,18 @@ class ForEachTag extends BodyTag
     			 
     			$stripped = $this->stripPercents($param);
     	
-    			$dNotation = '${' . $stripped . '}';
-    	
-    			$value = $elEngine->parse($dNotation);
-    			
-    	
-    			$out = str_replace($param, $value, $out);
+                if (strcasecmp($stripped, "__index__") == 0) {
+                    
+                    $out = str_replace($param, $forEachId, $out);
+                   
+                } else {
+                    
+                    $dNotation = '${' . $stripped . '}';
+
+                    $value = $elEngine->parse($dNotation);
+
+                    $out = str_replace($param, $value, $out);
+                }
     		}
     	
     		$this->out($out);
