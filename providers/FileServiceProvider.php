@@ -106,7 +106,7 @@ class FileServiceProvider implements ProviderInterface, FileService
         return $fileSize;
     }
     
-    public function uploadedFileSizeString($postAttributeName, $round = 2) {
+    public function uploadedFileSizeString($postAttributeName, $round = 1) {
         
         if(!$this->uploadedFileAvailable($postAttributeName))
         {
@@ -115,14 +115,11 @@ class FileServiceProvider implements ProviderInterface, FileService
         
         $fileSize = basename($_FILES[$postAttributeName]['size']);
         
-        
         if(empty($fileSize))
         {
             return false;
         }
-        
-        $fileSize = round($round, 2);
-        
+                
         $fileSizeString = "";
         
         if ($fileSize >= 0 && $fileSize <= 1023) {
@@ -131,15 +128,18 @@ class FileServiceProvider implements ProviderInterface, FileService
             
         } else if ($fileSize >= 1024 && $fileSize <= 1048575) {
             
-            $fileSizeString = $fileSize . " Mb";
+            $kb = round(($fileSize / 1024));
+            $fileSizeString = "$kb Kb";
             
         } else if ($fileSize >= 1048576 && $fileSize <= 1073741823) {
             
-            $fileSizeString = $fileSize . " Gb";
+            $mb = round(($fileSize / 1048576), $round);
+            $fileSizeString = "$mb Mb";
             
         } else if ($fileSize >= 1073741824 ) {
             
-            $fileSizeString = $fileSize . " Tb";
+            $gb = round(($fileSize / 1073741824), $round);
+            $fileSizeString = "$gb Gb";
         }
         
         return $fileSizeString;
