@@ -210,6 +210,8 @@ class HTTPServiceProvider implements ProviderInterface, HTTPService
                 break;
             
         }
+        
+        return $contentType;
     }
 }
 

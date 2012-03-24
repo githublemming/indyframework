@@ -195,10 +195,11 @@ class FileServiceProvider implements ProviderInterface, FileService
         $result = @move_uploaded_file($_FILES[$postAttributeName]['tmp_name'], $newFile);
 
         if(empty($result))
-        {
+        {            
             $this->logger->log(Logger::LOG_LEVEL_WARNING,
                               'FileServiceProvider: upload',
-                              "There was an error moving the uploaded file.");
+                              "There was an error moving the uploaded file. [" + $result + "]");
+            
             return false;
         }
         
