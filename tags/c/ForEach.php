@@ -39,10 +39,6 @@ class ForEachTag extends BodyTag
         		
         		$this->handleObjectArray();
         	}
-
-        } else {
-            
-            error_log($this->items + "is not and array");
         }
     }
     
