@@ -2,11 +2,9 @@
 
 require_once INDY_TAGS . '/Tag.php';
 
-abstract class SimpleTag implements Tag
-{    
-    private $buffer = array();
+abstract class SimpleTag implements Tag {
         
-    protected $pageScope;
+ protected $pageScope;
     
     public abstract function doTag();
 
@@ -18,19 +16,12 @@ abstract class SimpleTag implements Tag
     
     public function run()
     {
-        $this->doTag();
-        
-        $output = implode($this->buffer);
-        
-        $view = new View($this->pageScope);
-        $out = $view->load($output);
-                
-        return $out;
+        return $this->doTag();
     }
     
     protected function out($value)
-    {        
-        $this->buffer[] = $value;
+    {                
+        echo $value;
     }
     
     protected function getELParser() {

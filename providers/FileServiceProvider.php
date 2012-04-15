@@ -58,7 +58,10 @@ class FileServiceProvider implements ProviderInterface, FileService
 
         if ($_FILES[$postAttributeName]['error'] > 0) {
             
-            echo "Error: " . $_FILES[$postAttributeName]["error"];
+            $error_code = $_FILES[$postAttributeName]["error"];
+            $errDesc = $this->file_upload_error_message($error_code);
+            
+            error_log("FileServiceProvider: uploadedFileAvailable - Error: " . $errDesc);
             
         } else {
         
@@ -204,6 +207,39 @@ class FileServiceProvider implements ProviderInterface, FileService
         }
         
         return true;
+    }
+    
+    private function file_upload_error_message($error_code) {
+        
+        $errorDesc = "";
+        
+        switch ($error_code) { 
+            case UPLOAD_ERR_INI_SIZE: 
+                $errorDesc =  'The uploaded file exceeds the upload_max_filesize directive in php.ini'; 
+                break;
+            case UPLOAD_ERR_FORM_SIZE: 
+                $errorDesc =  'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form'; 
+                break;
+            case UPLOAD_ERR_PARTIAL: 
+                $errorDesc =  'The uploaded file was only partially uploaded'; 
+                break;
+            case UPLOAD_ERR_NO_FILE: 
+                $errorDesc =  'No file was uploaded'; 
+                break;
+            case UPLOAD_ERR_NO_TMP_DIR: 
+                $errorDesc =  'Missing a temporary folder'; 
+                break;
+            case UPLOAD_ERR_CANT_WRITE: 
+                $errorDesc =  'Failed to write file to disk'; 
+                break;
+            case UPLOAD_ERR_EXTENSION: 
+                $errorDesc =  'File upload stopped by extension'; 
+                break;
+            default: 
+                $errorDesc =  'Unknown upload error'; 
+        } 
+        
+        return $errorDesc;
     }
 }
 

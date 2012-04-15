@@ -32,7 +32,7 @@ interface FileService extends ServiceInterface
      * @param round the number of deciminal places to round the size too. This
      * defaults to 2.
      */
-    public function uploadedFileSizeString($postAttributeName, $round = 1);
+    public function uploadedFileSizeString($postAttributeName, $round = 2);
     
     /**
      * Returns the type of the file. 

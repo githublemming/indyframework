@@ -7,7 +7,7 @@
  *
  * @author		Mark P Haskins
  * @copyright	Copyright (c) 2010 - 2012, Mark P Haskins
- * @link		http://www.marksdevserver.com
+ * @link		http://www.indyframework.org
  */
 
 /**
@@ -26,7 +26,7 @@ class SetTag extends SimpleTag
     protected $value;
         
     public function doTag()
-    {              
+    {        
         $this->pageScope->setAttribute($this->var, $this->value);
     }
 }

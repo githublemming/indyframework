@@ -7,7 +7,7 @@
  *
  * @author		Mark P Haskins
  * @copyright	Copyright (c) 2010 - 2012, Mark P Haskins
- * @link		http://www.marksdevserver.com
+ * @link		http://www.indyframework.org
  */
 
 /**
@@ -27,11 +27,9 @@ class ImportTag extends SimpleTag
 	private $view;
 
 	public function doTag()
-	{
-		$this->view = new View($this->pageScope);
+	{		
+		echo file_get_contents(APPLICATION_PATH . $this->url);
 		
-		$view = file_get_contents(APPLICATION_PATH . $this->url);
-		
-		$this->out($this->view->load($view));
+		//$this->out($this->view->load($view));
 	}
 }

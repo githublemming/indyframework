@@ -7,7 +7,7 @@
  *
  * @author		Mark P Haskins
  * @copyright	Copyright (c) 2010 - 2012, Mark P Haskins
- * @link		http://www.marksdevserver.com
+ * @link		http://www.indyframework.org
  */
 
 /**

@@ -7,7 +7,7 @@
  *
  * @author		Mark P Haskins
  * @copyright	Copyright (c) 2010 - 2012, Mark P Haskins
- * @link		http://www.marksdevserver.com
+ * @link		http://www.indyframework.org
  */
 
 /**
@@ -26,9 +26,10 @@ class ForEachTag extends BodyTag
         
     protected $items;
     protected $var;
+    protected $varStatus = "status";
 
     public function doTag()
-    {        	
+    {        	        
         if (is_array($this->items)) {
 
         	if ($this->is_assoc()) {
@@ -39,6 +40,10 @@ class ForEachTag extends BodyTag
         		
         		$this->handleObjectArray();
         	}
+
+        } else {
+            
+            error_log($this->items + "is not an array");
         }
     }
     
@@ -71,39 +76,33 @@ class ForEachTag extends BodyTag
     }
     
     private function handleObjectArray() {
-    	
-    	$body = $this->getBodyContent();
-    	
-        $forEachId = 0;
-    	foreach ($this->items as $item) {
-    		 
-            $forEachId = $forEachId + 1;
+  
+        $pageProcesor = PageProcessor::instance();
+        
+        $body = $this->getBodyContent();
+        
+        $pageArray = preg_split ('/$\R?^/m', $body);               
+
+        $index = 0;
+        $count = 1;
+        foreach ($this->items as $item) {
+                        
+            $pageContext = new PageContext();
             
-    		$out = $body;
-    	
-    		$elEngine = $this->getELEngine($item);
-    		$params = $this->getRequiredParams($out);
-    		    	
-    		foreach($params as $param) {
-    			 
-    			$stripped = $this->stripPercents($param);
-    	
-                if (strcasecmp($stripped, "__index__") == 0) {
-                    
-                    $out = str_replace($param, $forEachId, $out);
-                   
-                } else {
-                    
-                    $dNotation = '${' . $stripped . '}';
-
-                    $value = $elEngine->parse($dNotation);
-
-                    $out = str_replace($param, $value, $out);
-                }
-    		}
-    	
-    		$this->out($out);
-    	}
+            $iteratorStatus = new IteratorStatus($index, $count);
+            
+            $pageContext->setAttribute($this->var, $item);
+            $pageContext->setAttribute($this->varStatus, $iteratorStatus);
+            
+            $pageProcesor->processPageSnippet($pageContext, $pageArray);
+            
+            $pageContext->removeAttribute($this->var);
+            
+            echo "\n";
+            
+            $index++;
+            $count++;
+        }
     }
     
     private function getRequiredParams($body) {
@@ -119,25 +118,28 @@ class ForEachTag extends BodyTag
         
         return $requiredParams;
     }
-    
-    private function stripPercents($reqVar) {
-                
-        $length = strlen($reqVar);
-
-        $requireParam = substr($reqVar, 0, ($length -1));
-        $requireParam = substr($requireParam, 1);  
         
-        return $requireParam;
+}
+
+class IteratorStatus {
+    
+    private $index;
+    private $count;
+    
+    public function __construct($index, $count)  {  
+        
+        $this->index = $index;
+        $this->count = $count;
     }
     
-    private function getELEngine($item) {
-        
-        $pageScope = new PageScope();
-        $pageScope->setAttribute($this->var, $item);
-        
-        $elEngine = new EL_Engine($pageScope);
-        
-        return $elEngine;
+    public function getIndex() {
+        return $this->index;
+    }
+    
+    public function getCount() {
+        return $this->count;
     }
 }
 ?>
+
+

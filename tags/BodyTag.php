@@ -14,7 +14,7 @@ abstract class BodyTag extends SimpleTag implements Tag
         $this->extractBodyContent($bodyTag);
     }
     
-    protected function getBodyContent()
+    public function getBodyContent()
     {
         return $this->bodyContent;
     }
@@ -32,18 +32,17 @@ abstract class BodyTag extends SimpleTag implements Tag
         
         $tags = array();
         preg_match_all($bodyTagPattern, $bodyTag, $tags, PREG_SET_ORDER);
-        foreach($tags as $tag)
-        {              
-            $openTag = $tag[0];            
-            $closeTag = '<\\' . $tag[1] . '>';
-            
-            $start = strlen($openTag);
-            $end = strlen($closeTag);
-                        
-            $length = strlen($bodyTag) - $start - $end;
-            
-            $this->bodyContent = substr($bodyTag, $start, $length);
-        }
+        
+        $tag = $tags[0];
+        $openTag = $tag[0];            
+        $closeTag = '<\\' . $tag[1] . '>';
+
+        $start = strlen($openTag);
+        $end = strlen($closeTag);
+
+        $length = strlen($bodyTag) - $start - $end;
+
+        $this->bodyContent = substr($bodyTag, $start, $length);
     }
 }
 ?>

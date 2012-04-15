@@ -7,7 +7,7 @@
  *
  * @author		Mark P Haskins
  * @copyright	Copyright (c) 2010 - 2012, Mark P Haskins
- * @link		http://www.marksdevserver.com
+ * @link		http://www.indyframework.org
  */
 
 /**
@@ -29,12 +29,12 @@ class EL_Engine extends Engine
     const OPERATOR_MA = '~\$\{\s*[\"-\w\.]+\s*[\+\-\*\/]+\s*[\"-\w\.]+\s*\}~i';
     const STRCONCAT   = '~\$\{\s*\".*?\"\s*\+\s*\".*?\"+\s*\}~i';
     
-    private $pageScope;
+    private $pageContext;
     private $mathEval;
     
-    public function __construct(&$pageScope)
+    public function __construct(PageContext &$pageContext)
     {
-        $this->pageScope = $pageScope;
+        $this->pageContext = $pageContext;
         $this->mathEval = new EvalMath();
     }
     
@@ -122,9 +122,9 @@ class EL_Engine extends Engine
             $attribute = substr($identifier, 0, $periodPos);
             $key = substr($identifier, $periodPos + 1, strlen($identifier) - ($periodPos + 1));
 
-            if ($this->pageScope->attributeExists($attribute))
+            if ($this->pageContext->attributeExists($attribute))
             {         
-            	$object = $this->pageScope->getAttribute($attribute);
+            	$object = $this->pageContext->getAttribute($attribute);
             	
 				if (is_array($object)) {
 					
@@ -148,10 +148,10 @@ class EL_Engine extends Engine
             // it's a constant
             $value = constant($identifier);
         }
-        else if ($this->pageScope->attributeExists($identifier))
+        else if ($this->pageContext->attributeExists($identifier))
         {                
             // we have a reference to a simple variable
-            $value = $this->pageScope->getAttribute($identifier); 
+            $value = $this->pageContext->getAttribute($identifier); 
         }
 
         return $value;  

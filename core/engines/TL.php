@@ -6,7 +6,7 @@
  *
  * @author		Mark P Haskins
  * @copyright	Copyright (c) 2010 - 2012, Mark P Haskins
- * @link		http://www.marksdevserver.com
+ * @link		http://www.indyframework.org
  */
 
 /**
@@ -28,14 +28,14 @@ class TL_Engine extends Engine
     private $tagLibrary;
     private $dollarNotationEngine;
     
-    private $pageScope;
+    private $pageContext;
 
-    public function __construct(&$pageScope)
+    public function __construct(PageContext &$pageContext)
     {        
     	parent::__construct();
     	
         $this->tagLibrary = TagLibrary::instance();
-        $this->pageScope = $pageScope;
+        $this->pageContext = $pageContext;
     }
     
     public function getTagInstance($tag)
@@ -47,13 +47,13 @@ class TL_Engine extends Engine
         $tagAttributes = $this->getTagAttributes($tag);
         
         $tagPath = $this->tagLibrary->getTag($tagLibrary, $tagName, $tagAttributes);
-
+        
         if ($tagPath != null && file_exists($tagPath))
-        {        	
+        {        	    
             require_once $tagPath;
 
             $className = ucfirst($tagName) . "Tag";
-            $tagInstance = new $className($tag, $this->pageScope);
+            $tagInstance = new $className($tag, $this->pageContext);
             
             $this->setAttributesOnTag($tagInstance, $tag);
             
@@ -80,7 +80,7 @@ class TL_Engine extends Engine
         if ($attrString !== "/")
         {       
             $dollarNotationPattern = "~" . REGEX_DOLLAR_NOTATION . "~i";
-            $attribPattern = "~[a-z\d]+=\"[\w\d\s!<>=\+\-\*\/]+\"~i";
+            $attribPattern = "~[a-z\d]+=\"[\w\d\s\.\'!<>=\+\-\*\/]+\"~i";
                         
             // if there is a slash at the end of the attributes remove it
             $pos = strpos($attrString, "/");
@@ -93,7 +93,7 @@ class TL_Engine extends Engine
             {
                 if (!isset ($this->dollarNotationEngine))
                 {
-                    $this->dollarNotationEngine = new EL_Engine($this->pageScope);
+                    $this->dollarNotationEngine = new EL_Engine($this->pageContext);
                 }
                 
                 $tags = array();
@@ -108,11 +108,13 @@ class TL_Engine extends Engine
             $attribs = array();
             preg_match_all($attribPattern, $attrString, $attribs, PREG_SET_ORDER);
             foreach ($attribs as $a)
-            {            
-                $keyValue = explode("=", $a[0]);
+            {                            
+                $attrib = $a[0];
+                
+                $posOfequals = strpos($attrib, "=");
 
-                $key = $keyValue[0];
-                $attributes[] = $key;   
+                $key = substr($attrib, 0, $posOfequals);
+                $attributes[] = $key;
             }
         }
                 
@@ -133,7 +135,7 @@ class TL_Engine extends Engine
         if ($attrString !== "/")
         {       
             $dollarNotationPattern = '~[a-z\d]+=\"' . REGEX_DOLLAR_NOTATION . '\"~i';
-            $attribPattern = "~[a-z\d]+=\"[\w\d\s\.!<>=\+\-\*\/]+\"~i";
+            $attribPattern = "~[a-z\d]+=\"[\w\d\s\.\'!<>=\+\-\*\/]+\"~i";
                         
             // if there is a slash at the end of the attributes remove it
             $pos = strpos($attrString, "/");
@@ -146,7 +148,7 @@ class TL_Engine extends Engine
             {
                 if (!isset ($this->dollarNotationEngine))
                 {
-                    $this->dollarNotationEngine = new EL_Engine($this->pageScope);
+                    $this->dollarNotationEngine = new EL_Engine($this->pageContext);
                 }
                 
                 $tags = array();
@@ -167,11 +169,14 @@ class TL_Engine extends Engine
             $attribs = array();
             preg_match_all($attribPattern, $attrString, $attribs, PREG_SET_ORDER);
             foreach ($attribs as $a)
-            {                        	
-                $keyValue = explode("=", $a[0]);
-
-                $attribute = strtolower($keyValue[0]);
-                $value = $this->stripQuotes($keyValue[1]);
+            {                 
+                $attrib = $a[0];
+                
+                $posOfequals = strpos($attrib, "=");
+                $key = substr($attrib, 0, $posOfequals);
+                
+                $attribute = strtolower($key);
+                $value = $this->stripQuotes(substr($attrib, $posOfequals + 1));
                 
                 $tagInstance->setAttribute($attribute, $value);
             }

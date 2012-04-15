@@ -7,7 +7,7 @@
  *
  * @author		Mark P Haskins
  * @copyright	Copyright (c) 2010 - 2012, Mark P Haskins
- * @link		http://www.marksdevserver.com
+ * @link		http://www.indyframework.org
  */
 
 /**
@@ -27,12 +27,14 @@ class IfTag extends BodyTag
         
     public function doTag()
     {    	
+        $response = Tag::SKIP_BODY;
+        
         if ($this->test == 1)
-        {
-            $body = $this->getBodyContent();
-                        
-            $this->out($body);
+        {            
+            $response = Tag::EVAL_BODY_INCLUDE;
         }
+        
+        return $response;
     }
 }
 

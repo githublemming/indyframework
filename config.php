@@ -1,5 +1,7 @@
 <?php
 
+defined( 'INDY_EXEC' ) or die( 'Restricted access' );
+
 /**
  * Indy Framework
  *
@@ -7,7 +9,7 @@
  *
  * @author		Mark P Haskins
  * @copyright	Copyright (c) 2010 - 2012, Mark P Haskins
- * @link		http://www.marksdevserver.com
+ * @link		http://www.indyframework.org
  */
 
 /**
@@ -38,28 +40,23 @@ define('AWS_SDK','aws-sdk-1.5.0/');
  * @package indyframework
  */
 
-
-ini_set("memory_limit","160M");
-
-defined( 'INDY_EXEC' ) or die( 'Restricted access' );
-
-//
-// Indy Framework Configuration file.
-//
-
-//
-// The location of your Application Configuration file.
-// 
-// The constant APPLICATION_PATH has been defined as one directory level above
-// the IndyFramework directory e.g. require_once(APPLICATION_PATH . '/IndyFramework/');
-//
-define ('APPLICATION_CONFIG', APPLICATION_PATH . 'application.xml');
-
 // It isn't compulsary for the implementing application to have it's own
 // configuration file, so we'll check one exists before we try and load it.
 if (file_exists(APPLICATION_PATH . 'application.cfg'))
 {
     include APPLICATION_PATH . 'application.cfg';
+}
+
+//
+// The default location of your Application Configuration file.
+// 
+// The constant APPLICATION_PATH has been defined as one directory level above
+// the IndyFramework directory e.g. require_once(APPLICATION_PATH . '/IndyFramework/');
+//
+
+if (!defined( 'APPLICATION_CONFIG' )) {
+    
+    define ('APPLICATION_CONFIG', APPLICATION_PATH . 'application.xml');
 }
 
 
@@ -127,7 +124,7 @@ define('APPLICATION_VIEW','3');
 
 
 //Define the RegularExpressions used in determining tags and Dollar Notations
-define('REGEX_TAG_ATTRIBUTE_PATTERN', '(?:\s[a-z\d]+=\"[\$\{\w\d\s\.!<>=\+\-\*\/\}]+\"){0,5}');
+define('REGEX_TAG_ATTRIBUTE_PATTERN', '(?:\s[a-z\d]+=\"[\$\{\w\d\s\.\'!<>=\+\-\*\/\}]+\"){0,5}');
 define('REGEX_SIMPLE_TAG_PATTERN', '<[a-z]+:[a-z]+\s*' . REGEX_TAG_ATTRIBUTE_PATTERN . '\s*/>');
 define('REGEX_BODY_OPEN_TAG_PATTERN'  , '<([a-z]+:[a-z]+)\s*' . REGEX_TAG_ATTRIBUTE_PATTERN . '\s*>');
 define('REGEX_BODY_CLOSE_TAG_PATTERN'  , '</\1>');
@@ -144,7 +141,9 @@ require_once INDY_CORE. 'TagDefinition.php';
 
 require_once INDY_CORE. 'AbstractPage.php';
 require_once INDY_CORE. 'PageScope.php';
-require_once INDY_CORE. 'View.php';
+
+require_once INDY_CORE . 'page/PageContext.php';
+require_once INDY_CORE . 'page/PageProcessor.php';
 
 // Setting the logging level that is required for the application. If this is
 // commented out then the default level will be LOG_LEVEL_INFO

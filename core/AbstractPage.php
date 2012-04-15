@@ -7,7 +7,7 @@
  *
  * @author		Mark P Haskins
  * @copyright	Copyright (c) 2010 - 2012, Mark P Haskins
- * @link		http://www.marksdevserver.com
+ * @link		http://www.indyframework.org
  */
 
 /**
@@ -17,33 +17,30 @@
  * @package indyframework/core
  */
  
-class AbstractPage {
+abstract class AbstractPage {
 	
-    private $pageScope;
-    private $view;
-    
-    private $viewfile;
-    
+    private $pageContext;
+        
     function __construct() {
         
-        $this->pageScope = new PageScope();
-        $this->view = new View($this->pageScope);
+        $this->pageContext = new PageContext();
     }
     
     public function setView($view) {
         
-        $this->viewfile = $view;
+        $this->pageContext->setPage($view);
     }
     
     public function setAttribute($attribute, $value) {
         
-        $this->pageScope->setAttribute($attribute, $value);
+        $this->pageContext->setAttribute($attribute, $value);
         
     }
     
     public function display() {
         
-        $this->view->display($this->viewfile);
+        $pageProcesor = PageProcessor::instance();
+        $pageProcesor->processPage($this->pageContext);
     }
 }
 
