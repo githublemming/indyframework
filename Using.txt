@@ -1,0 +1,9 @@
+
+If you have downloaded this file from the website then the zip file you will have
+received will contain a couple of directories, i.e.
+
+/docs
+/extras
+/framework
+
+The only directory that you need to copy into your project is 'framework'.

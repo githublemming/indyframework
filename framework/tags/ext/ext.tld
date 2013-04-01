@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<taglib>
+    <name>Extra Tag Library</name>
+    <description>Provides the extra functionality tags</description>
+
+    <tag>
+        <name>ReCaptcha</name>
+        <description>Renders a reCAPTCHA control to the page</description>
+    </tag>
+
+</taglib>

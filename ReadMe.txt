@@ -1,6 +1,6 @@
 Welcome to the Indy Framework.
 
-The IndyFramework is written in PHP and aims to provide three main areas of functionality:
+The Indy Framework is written in PHP and aims to provide three main areas of functionality:
 
 1. Service based application/web site developement
 2. Custom Tags to keep the HTML sections of your project script free
@@ -18,11 +18,18 @@ Custom Tags      : Beta   - These work, but there are a few tweaks that need to
 Dollar Notation  : Alpha  - Works for basic notations ${somevalue} and
                    ${class.method}, need to add more variations.
 
-Latest Changes - 3rd March 2012
+
+Latest Changes 
+
+1st April 2013
+==============
+Restructured the Git repository to separate the documentation out of the framework
+directory. I've also move some of the providers that haven't been fully tested out
+of the main framework directory into a directory called 'extra'
+
+15th April 2012
 ==============
 
-Improved Exception Handling, should be no more White Screens of Death. The
-    error  message (and possibly) an exception should show on the page.
-Improved logging
-Removed some of the annoying Case Sensitivity
+Refactored Page handling to lower memory footprint
+Refactored Tag handling to improve nested tag support.
 General bug fixing

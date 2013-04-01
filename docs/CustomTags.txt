@@ -2,9 +2,9 @@ One of the really useful aspects of developing a website using Java was the abil
 to create your own Custom Tags. These tags could used along side other standard
 HTML tags in your page view. This served at least two functions 
 
-1) it kept your markup code free
+1) it kept your markup java snippet free
 2) it provided the capability for whoever was responsible for writing the markup
-   to add come logic into the page without resorting to Javascript.
+   to add some logic into the page without resorting to Javascript.
 
 Indy comes with a couple of tags already that are aimed at making life a bit easier
 some of these are:
@@ -23,12 +23,13 @@ Creating your own tag is fairly simple:
 * put your code in the doTag function.
 
 Things to remember when creating tag, your code could be used on a variety of
-platforms, some are case sensitive, some are case insensitive so you should follow
-these naming conventions
+platforms, some are case sensitive, some are case insensitive so to ensure that
+your tags work in either environment you should follow these naming conventions
 
 * The class name should be the same as the file name with Tag appended on to it
   e.g ForEach.php  -> ForEachTag
-* Your defintion should be the same as the file name and the class name e,g
+
+* Your definition should be the same as the filename and the class name e,g
     <tag>
         <name>ForEach</name>
     </tag>
